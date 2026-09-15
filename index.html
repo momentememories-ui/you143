@@ -79,22 +79,23 @@
       pointer-events: none;
     }
 
-    /* --- ส่วนกล่องไม้ขีดไฟซ้ายล่าง --- */
+    /* --- ส่วนกล่องไม้ขีดไฟซุ่มวางมุมขวาล่าง --- */
     .matchbox-area {
       position: absolute;
-      bottom: 25px;
-      left: 25px;
+      bottom: 30px;
+      right: 30px;
       z-index: 10;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
+      align-items: flex-end;
+      gap: 15px;
+      transition: opacity 0.5s ease;
     }
 
     /* แถบข้างกล่องสำหรับจุด */
     .matchbox-striker {
-      width: 180px;
-      height: 52px;
+      width: 240px;
+      height: 60px;
       background: #3e2723;
       border: 3px solid #271714;
       border-radius: 8px;
@@ -103,16 +104,16 @@
       align-items: center;
       justify-content: center;
       color: #d7ccc8;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 400;
       letter-spacing: 0.5px;
       background-image: repeating-linear-gradient(45deg, #2c1b18 0, #2c1b18 5px, #3e2723 5px, #3e2723 10px);
     }
 
-    /* ก้านไม้ขีดไฟจับถูได้อิสระ */
+    /* ก้านไม้ขีดไฟขยายใหญ่ขึ้น 200% */
     .matchstick-item {
-      width: 90px;
-      height: 22px;
+      width: 270px;
+      height: 66px;
       cursor: grab;
       position: relative;
       touch-action: none;
@@ -132,13 +133,13 @@
     /* เปลวไฟขยับได้ตรงหัวไม้ขีด */
     .flame-animated {
       position: absolute;
-      top: -28px;
-      left: -12px;
-      width: 32px;
-      height: 42px;
+      top: -65px;
+      left: -20px;
+      width: 70px;
+      height: 90px;
       background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffeb3b 25%, #ff9800 60%, transparent 80%);
       border-radius: 50% 50% 35% 35%;
-      filter: drop-shadow(0 0 10px #ff5722);
+      filter: drop-shadow(0 0 18px #ff5722);
       animation: flameMotion 0.15s infinite alternate ease-in-out;
       display: none;
       pointer-events: none;
@@ -149,24 +150,24 @@
       100% { transform: scale(1.1) rotate(4deg); opacity: 1; }
     }
 
-    /* ส่วนหัวใจกดค้าง */
+    /* ส่วนหัวใจกดค้าง (ซ่อนไว้ก่อน รอเผาเสร็จถึงขึ้น) */
     .controls {
       position: absolute;
-      bottom: 25px;
-      right: 25px;
+      bottom: 30px;
+      left: 30px;
       z-index: 10;
     }
 
     .heart-section {
-      display: none;
+      display: none; /* ซ่อนไว้เริ่มต้น */
       flex-direction: column;
       align-items: center;
       gap: 8px;
       background: rgba(255, 255, 255, 0.95);
       padding: 14px 22px;
       border-radius: 20px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-      animation: fadeIn 1s forwards;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+      animation: fadeIn 0.8s forwards;
     }
 
     .heart-section p {
@@ -237,8 +238,8 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -263,8 +264,8 @@
     <img src="กล่อง.png" class="layer-1-box" alt="กล่อง">
   </div>
 
-  <!-- กล่องไม้ขีดมุมซ้ายล่าง -->
-  <div class="matchbox-area">
+  <!-- กล่องไม้ขีดมุมขวาล่าง -->
+  <div class="matchbox-area" id="matchboxArea">
     <div class="matchbox-striker" id="strikerStrip">
       จับไม้ขีดลากถูตรงนี้ 🔥
     </div>
@@ -274,7 +275,7 @@
     </div>
   </div>
 
-  <!-- ส่วนหัวใจกดค้าง -->
+  <!-- ส่วนหัวใจกดค้าง (จะค่อยๆ แสดงขึ้นมาเมื่อเผากระดาษเสร็จเรียบร้อย) -->
   <div class="controls">
     <div class="heart-section" id="heartSection">
       <p>กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
@@ -300,9 +301,10 @@
     const matchEl = document.getElementById('draggableMatch');
     const flameEl = document.getElementById('flame');
     const strikerStrip = document.getElementById('strikerStrip');
+    const matchboxArea = document.getElementById('matchboxArea');
 
     let isLit = false;
-    let frictionScore = 0; // สะสมแรงถู
+    let frictionScore = 0;
     let isDraggingMatch = false;
     let autoBurning = false;
     let burnRadius = 0;
@@ -349,7 +351,6 @@
       const clientX = e.clientX || (e.touches && e.touches[0].clientX);
       const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
-      // คำนวณระยะการถูขยับ
       const deltaX = Math.abs(clientX - lastX);
       const deltaY = Math.abs(clientY - lastY);
       const moveDistance = Math.hypot(deltaX, deltaY);
@@ -359,8 +360,8 @@
 
       // ปรับตำแหน่งก้านไม้ขีดตามมือ/เมาส์
       matchEl.style.position = 'fixed';
-      matchEl.style.left = (clientX - 15) + 'px';
-      matchEl.style.top = (clientY - 10) + 'px';
+      matchEl.style.left = (clientX - 45) + 'px';
+      matchEl.style.top = (clientY - 30) + 'px';
       matchEl.style.zIndex = '99';
 
       // เช็คการถูบนแถบข้างกล่อง
@@ -369,9 +370,9 @@
         if (clientX >= strikerRect.left && clientX <= strikerRect.right &&
             clientY >= strikerRect.top && clientY <= strikerRect.bottom) {
           
-          if (moveDistance > 2) { // มีการเคลื่อนที่ขัดถูจริงๆ
+          if (moveDistance > 2) {
             frictionScore += moveDistance;
-            if (frictionScore > 250) { // เมื่อสะสมแรงถูได้ตามกำหนด
+            if (frictionScore > 250) {
               isLit = true;
               flameEl.style.display = 'block';
               strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลาง';
@@ -386,7 +387,7 @@
         const centerY = window.innerHeight / 2;
         const distFromCenter = Math.hypot(clientX - centerX, clientY - centerY);
 
-        if (distFromCenter < 120) {
+        if (distFromCenter < 140) {
           startAutoBurn(centerX, centerY);
         }
       }
@@ -408,6 +409,10 @@
     function startAutoBurn(cx, cy) {
       autoBurning = true;
       burnRadius = 10;
+
+      // ซ่อนกล่องไม้ขีดเมื่อเริ่มจุดติดกระดาษ
+      matchboxArea.style.opacity = '0';
+      setTimeout(() => { matchboxArea.style.display = 'none'; }, 500);
 
       function burnStep() {
         if (burnRadius < maxBurnRadius) {
@@ -441,7 +446,7 @@
 
           requestAnimationFrame(burnStep);
         } else {
-          // เผาเสร็จสิ้น
+          // เผาเสร็จสิ้น -> ค่อยแสดงปุ่มหัวใจกดค้าง
           fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
           document.getElementById('heartSection').style.display = 'flex';
         }
