@@ -71,6 +71,8 @@
       width: 100%;
       height: 100%;
       z-index: 2;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     /* ชั้นที่ 1: กล่อง (กล่อง.png) */
@@ -85,7 +87,7 @@
       pointer-events: none;
     }
 
-    /* Canvas สำหรับวาดไฟไหม้ (เลเยอร์บนสุด) */
+    /* Canvas สำหรับวาดไฟไหม้ */
     #fxCanvas {
       position: absolute;
       top: 0;
@@ -133,36 +135,21 @@
       touch-action: none;
     }
 
-    .matchstick-item:active {
-      cursor: grabbing;
-    }
+    .matchstick-item:active { cursor: grabbing; }
+    .matchstick-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-    .matchstick-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      pointer-events: none;
-    }
-
-    /* รูปหัวใจสีชมพู SVG เด้งดึงดูดสายตา */
+    /* อิโมจิหัวใจสีชมพูโรสโกลด์เด้งดึงดูดสายตา */
     .bouncing-heart-trigger {
       position: absolute;
       bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
-      width: 70px;
-      height: 70px;
+      font-size: 65px;
       cursor: pointer;
       z-index: 150;
       display: none;
       animation: heartBounce 1.2s infinite ease-in-out;
-      filter: drop-shadow(0 6px 14px rgba(255, 105, 180, 0.5));
-    }
-
-    .bouncing-heart-trigger svg {
-      width: 100%;
-      height: 100%;
-      fill: #ff69b4;
+      filter: drop-shadow(0 6px 14px rgba(183, 110, 121, 0.6));
     }
 
     @keyframes heartBounce {
@@ -170,7 +157,7 @@
       50% { transform: translateX(-50%) scale(1.3) rotate(-5deg); }
     }
 
-    /* Overlay ป๊อปอัปหัวใจดวงใหญ่เต็มหน้าจอ (เปลี่ยนเป็นพื้นหลังสีขาวบริสุทธิ์) */
+    /* Overlay ป๊อปอัปหัวใจดวงใหญ่เต็มหน้าจอ (พื้นหลังสีขาว) */
     .big-heart-modal {
       position: absolute;
       top: 0;
@@ -186,7 +173,7 @@
       animation: fadeIn 0.4s ease;
     }
 
-    /* คอนเทนเนอร์หัวใจดวงใหญ่เติมน้ำ */
+    /* คอนเทนเนอร์หัวใจดวงใหญ่เติมน้ำ Rose Gold */
     .big-heart-container {
       position: relative;
       width: 240px;
@@ -194,31 +181,30 @@
       cursor: pointer;
     }
 
-    /* รูปหัวใจสีชมพูมินิมอลบนพื้นขาว */
     .big-heart-shape {
       width: 100%;
       height: 100%;
-      background-color: #fff0f5;
+      background-color: #fff5f7;
       clip-path: path('M120,200 C120,200 20,130 20,70 C20,35 45,15 75,15 C95,15 110,25 120,40 C130,25 145,15 165,15 C195,15 220,35 220,70 C220,130 120,200 120,200 Z');
       position: relative;
-      border: 3px solid #ff80ab;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(255, 128, 171, 0.3);
+      border: 3px solid #b76e79;
+      box-shadow: 0 10px 25px rgba(183, 110, 121, 0.3);
     }
 
-    /* น้ำสีชมพูเติมจากล่างขึ้นบน */
+    /* น้ำสีชมพู Rose Gold */
     .heart-water-fill {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 0%;
-      background: linear-gradient(0deg, #ff4081, #ff80ab);
-      transition: height 0.15s ease-out;
+      background: linear-gradient(0deg, #b76e79, #e8a0a8, #f7accf);
+      transition: height 0.12s ease-out;
+      box-shadow: 0 -4px 12px rgba(183, 110, 121, 0.5);
     }
 
     .fill-instruction {
-      color: #ff4081;
+      color: #b76e79;
       font-size: 15px;
       margin-top: 25px;
       font-weight: 400;
@@ -238,7 +224,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(5px);
       z-index: 300;
       display: none;
       justify-content: center;
@@ -247,46 +234,79 @@
 
     .polaroid-container { position: relative; width: 100%; height: 100%; }
 
+    /* รูปโพลารอยด์ตอนเด้งออกมา (ไร้ข้อความ) */
     .polaroid {
       position: absolute;
-      width: 160px;
-      background: white;
-      padding: 10px 10px 18px 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      border-radius: 4px;
+      width: 150px;
+      background: #ffffff;
+      padding: 10px 10px 12px 10px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+      border-radius: 6px;
       cursor: pointer;
-      transition: transform 0.3s, z-index 0.3s;
-      animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27);
+      animation: burstOutFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
     }
 
-    .polaroid img { width: 100%; height: 125px; object-fit: cover; }
-    .polaroid .caption { text-align: center; font-size: 12px; color: #333; margin-top: 8px; font-weight: 400; }
-    .polaroid.active { transform: scale(1.5) translate(-15%, -15%) !important; z-index: 999 !important; }
+    .polaroid img {
+      width: 100%;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 3px;
+    }
 
-    /* รูปหัวใจลอยกระจาย */
+    /* ข้อความใต้ภาพที่จะซ่อนไว้ก่อน */
+    .polaroid .caption {
+      display: none;
+      text-align: center;
+      font-size: 14px;
+      color: #b76e79;
+      margin-top: 12px;
+      font-weight: 400;
+    }
+
+    /* เมื่อกดขยายรูปเต็มหน้าจอ */
+    .polaroid.active {
+      position: fixed !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+      z-index: 999 !important;
+      width: 190px !important;
+      padding: 12px 12px 18px 12px !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
+    }
+
+    .polaroid.active .caption {
+      display: block !important;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* เอฟเฟกต์รูปพุ่งออกมาพร้อมกันจากตำแหน่งหัวใจ */
+    @keyframes burstOutFromHeart {
+      0% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* อิโมจิหัวใจ Rose Gold ลอยกระจาย */
     .floating-heart {
       position: absolute;
       pointer-events: none;
       z-index: 350;
-      width: 30px;
-      height: 30px;
-      animation: floatUp 2.5s ease-out forwards;
-    }
-
-    .floating-heart svg {
-      width: 100%;
-      height: 100%;
-      fill: #ff69b4;
+      font-size: 26px;
+      animation: floatUp 2.2s ease-out forwards;
+      filter: drop-shadow(0 2px 6px rgba(183, 110, 121, 0.4));
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-350px) scale(1.4) rotate(25deg); opacity: 0; }
-    }
-
-    @keyframes popUp {
-      0% { transform: scale(0); opacity: 0; }
-      100% { opacity: 1; }
+      0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-380px) scale(1.5) rotate(30deg); opacity: 0; }
     }
 
     @keyframes fadeIn {
@@ -321,12 +341,8 @@
       <img id="matchImg" src="ไม้ขีด.png" alt="ไม้ขีด">
     </div>
 
-    <!-- รูปหัวใจสีชมพูเด้งดึงดูดสายตา -->
-    <div class="bouncing-heart-trigger" id="heartTrigger">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
-    </div>
+    <!-- อิโมจิหัวใจสีชมพูโรสโกลด์ -->
+    <div class="bouncing-heart-trigger" id="heartTrigger">💗</div>
 
     <!-- ป๊อปอัปหัวใจดวงใหญ่บนพื้นหลังสีขาว -->
     <div class="big-heart-modal" id="heartModal">
@@ -335,7 +351,7 @@
           <div class="heart-water-fill" id="waterFill"></div>
         </div>
       </div>
-      <p class="fill-instruction">แตะหรือกดค้างเพื่อเติมความรัก ❤️</p>
+      <p class="fill-instruction">แตะหรือกดค้างเพื่อเติมความรัก ✨</p>
     </div>
 
     <!-- โพลารอยด์ป๊อปอัป -->
@@ -377,25 +393,42 @@
       noiseAngles.push(0.95 + wave);
     }
 
-    function resizeCanvas() {
-      const rect = viewport.getBoundingClientRect();
-      canvas.width = rect.width;
-      canvas.height = rect.height;
-      fxCanvas.width = rect.width;
-      fxCanvas.height = rect.height;
-
-      maxBurnRadius = Math.hypot(rect.width / 2, rect.height / 2);
-      drawPaper();
-    }
-
+    /* --- ปรับปรุงการเรนเดอร์ Canvas กระดาษ2 ให้คมชัดเต็มสเกล --- */
     const paperImg = new Image();
     paperImg.src = 'กระดาษ2.png';
-    paperImg.onload = () => resizeCanvas();
 
-    function drawPaper() {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.drawImage(paperImg, 0, 0, canvas.width, canvas.height);
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = viewport.getBoundingClientRect();
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+
+      fxCanvas.width = rect.width * dpr;
+      fxCanvas.height = rect.height * dpr;
+      fxCanvas.style.width = rect.width + 'px';
+      fxCanvas.style.height = rect.height + 'px';
+
+      ctx.scale(dpr, dpr);
+      fxCtx.scale(dpr, dpr);
+
+      maxBurnRadius = Math.hypot(rect.width / 2, rect.height / 2);
+      drawPaper(rect.width, rect.height);
     }
+
+    function drawPaper(w, h) {
+      if (paperImg.complete && paperImg.naturalWidth !== 0) {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(paperImg, 0, 0, w, h);
+      }
+    }
+
+    paperImg.onload = () => {
+      const rect = viewport.getBoundingClientRect();
+      resizeCanvas();
+    };
 
     window.addEventListener('resize', resizeCanvas);
 
@@ -513,9 +546,7 @@
       }
     }
 
-    function onEnd(e) {
-      isDraggingMatch = false;
-    }
+    function onEnd() { isDraggingMatch = false; }
 
     matchEl.addEventListener('mousedown', onStart);
     window.addEventListener('mousemove', onMove);
@@ -545,8 +576,10 @@
       strikerContainer.style.opacity = '0';
       matchEl.style.display = 'none';
 
+      const rect = viewport.getBoundingClientRect();
+
       function burnStep() {
-        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+        fxCtx.clearRect(0, 0, rect.width, rect.height);
 
         if (burnRadius < maxBurnRadius) {
           burnRadius += 2.8;
@@ -558,7 +591,6 @@
           ctx.restore();
 
           fxCtx.save();
-          
           drawSmoothPath(fxCtx, cx, cy, burnRadius, 25);
           fxCtx.strokeStyle = 'rgba(60, 30, 10, 0.4)';
           fxCtx.lineWidth = 22;
@@ -582,8 +614,8 @@
           updateParticles();
           requestAnimationFrame(burnStep);
         } else {
-          fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          fxCtx.clearRect(0, 0, rect.width, rect.height);
+          ctx.clearRect(0, 0, rect.width, rect.height);
           strikerContainer.style.display = 'none';
           heartTrigger.style.display = 'block';
         }
@@ -594,14 +626,15 @@
 
     function mainFxLoop() {
       if (!autoBurning) {
-        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+        const rect = viewport.getBoundingClientRect();
+        fxCtx.clearRect(0, 0, rect.width, rect.height);
         updateParticles();
       }
       requestAnimationFrame(mainFxLoop);
     }
     mainFxLoop();
 
-    /* --- กดหัวใจชมพูเพื่อเปิดหน้าจอหัวใจดวงใหญ่บนพื้นหลังสีขาว --- */
+    /* --- กดหัวใจเปิดหน้าจอเติมน้ำ --- */
     const heartModal = document.getElementById('heartModal');
     const waterFill = document.getElementById('waterFill');
     const bigHeartContainer = document.getElementById('bigHeartContainer');
@@ -619,15 +652,15 @@
         waterLevel += 4;
         if (waterLevel > 100) waterLevel = 100;
         waterFill.style.height = waterLevel + '%';
-        createFloatingHearts(3);
+        createFloatingHearts(2);
 
         if (waterLevel >= 100) {
           stopWatering();
           setTimeout(() => {
             heartModal.style.display = 'none';
-            showPolaroids();
+            showPolaroidsSimultaneously(); // รูปและอิโมจิพุ่งเด้งออกมาพร้อมกัน
             spawnMassiveHearts();
-          }, 400);
+          }, 350);
         }
       }
     }
@@ -650,81 +683,82 @@
     }, { passive: false });
     window.addEventListener('touchend', stopWatering);
 
-    /* --- สร้างรูปหัวใจสีชมพูลอยกระจาย --- */
+    /* --- อิโมจิหัวใจชมพูโรสโกลด์พุ่งลอยกระจาย --- */
+    const roseGoldHearts = ['💖', '💗', '✨', '🌸', '💕'];
+
     function createFloatingHearts(count = 1) {
       for (let i = 0; i < count; i++) {
         const heart = document.createElement('div');
         heart.className = 'floating-heart';
-        heart.innerHTML = `
-          <svg viewBox="0 0 24 24">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>`;
+        heart.innerText = roseGoldHearts[Math.floor(Math.random() * roseGoldHearts.length)];
         
         const startX = Math.random() * (viewport.clientWidth - 40) + 20;
-        const startY = viewport.clientHeight - 80;
+        const startY = viewport.clientHeight / 2 + 50;
         
         heart.style.left = startX + 'px';
         heart.style.top = startY + 'px';
-        const size = Math.random() * 20 + 20;
-        heart.style.width = size + 'px';
-        heart.style.height = size + 'px';
+        heart.style.fontSize = (Math.random() * 16 + 22) + 'px';
 
         viewport.appendChild(heart);
 
-        setTimeout(() => {
-          heart.remove();
-        }, 2500);
+        setTimeout(() => { heart.remove(); }, 2200);
       }
     }
 
     function spawnMassiveHearts() {
       let counter = 0;
       const interval = setInterval(() => {
-        createFloatingHearts(4);
+        createFloatingHearts(5);
         counter++;
-        if (counter > 15) clearInterval(interval);
-      }, 150);
+        if (counter > 12) clearInterval(interval);
+      }, 120);
     }
 
-    /* --- โพลารอยด์ป๊อปอัป 5 ภาพ --- */
+    /* --- ข้อมูลภาพและข้อความที่จะแสดงเมื่อกดคลิกขยาย --- */
     const polaroidData = [
       { img: 'img1.jpg', text: 'รูปแรกของเรา 💕', top: '15%', left: '10%', rotate: '-10deg' },
       { img: 'img2.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '12%', left: '52%', rotate: '8deg' },
-      { img: 'img3.jpg', text: 'รอยยิ้มนี้ชอบที่สุด 😊', top: '44%', left: '15%', rotate: '-5deg' },
-      { img: 'img4.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '42%', left: '50%', rotate: '12deg' },
+      { img: 'img3.jpg', text: 'รอยยิ้มนี้ชอบที่สุด 😊', top: '44%', left: '12%', rotate: '-6deg' },
+      { img: 'img4.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '42%', left: '52%', rotate: '12deg' },
       { img: 'img5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '26%', left: '30%', rotate: '2deg' }
     ];
 
-    function showPolaroids() {
+    /* --- แสดงรูปภาพและอิโมจิเด้งออกมาจากหัวใจพร้อมกัน --- */
+    function showPolaroidsSimultaneously() {
       const overlay = document.getElementById('polaroidOverlay');
       const container = document.getElementById('polaroidContainer');
+      container.innerHTML = '';
       overlay.style.display = 'flex';
 
       polaroidData.forEach((item, index) => {
-        setTimeout(() => {
-          const card = document.createElement('div');
-          card.className = 'polaroid';
-          card.style.top = item.top;
-          card.style.left = item.left;
-          card.style.transform = `rotate(${item.rotate})`;
-          card.style.zIndex = index + 1;
+        const card = document.createElement('div');
+        card.className = 'polaroid';
+        card.style.top = item.top;
+        card.style.left = item.left;
+        card.style.transform = `rotate(${item.rotate})`;
+        card.style.zIndex = index + 1;
 
-          card.innerHTML = `
-            <img src="${item.img}" alt="memory">
-            <div class="caption">${item.text}</div>
-          `;
+        card.innerHTML = `
+          <img src="${item.img}" alt="memory">
+          <div class="caption">${item.text}</div>
+        `;
 
-          card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
+        /* กดคลิกรูปเพื่อขยายเต็มหน้าจอ + แสดงข้อความ */
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isActive = card.classList.contains('active');
+          document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
+          
+          if (!isActive) {
             card.classList.add('active');
-          });
+          }
+        });
 
-          container.appendChild(card);
-        }, index * 200);
+        container.appendChild(card);
       });
     }
 
+    /* ปิดการขยายเมื่อกดพื้นที่ว่าง */
     document.getElementById('polaroidOverlay').addEventListener('click', () => {
       document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
     });
