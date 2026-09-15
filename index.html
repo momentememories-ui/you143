@@ -233,8 +233,9 @@
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.09), 0 2px 4px rgba(255, 183, 206, 0.15);
       border-radius: 2px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27);
-      animation: burstOutFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
+      opacity: 0;
+      transition: box-shadow 0.3s ease, width 0.3s ease, padding 0.3s ease;
+      will-change: transform, opacity, top, left;
     }
 
     .polaroid img {
@@ -276,6 +277,42 @@
       z-index: 10;
     }
 
+    /* Keyframe เด้งโผล่จากศูนย์กลางแล้วกระจายตัวไปยังตำแหน่งของตัวเอง */
+    @keyframes burstAndSpread {
+      0% {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        opacity: 0;
+      }
+      60% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1.1) rotate(var(--target-rotate));
+      }
+      100% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(var(--target-rotate));
+      }
+    }
+
+    /* Keyframe ขยับเด้งขึ้นลงเบาๆ ชวนให้กดดูรูป */
+    @keyframes gentleBounce {
+      0%, 100% {
+        transform: translateY(0px) rotate(var(--target-rotate));
+      }
+      50% {
+        transform: translateY(-8px) rotate(var(--target-rotate));
+      }
+    }
+
+    .polaroid.animate-burst {
+      animation: burstAndSpread 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .polaroid.idle-bounce {
+      animation: gentleBounce 2.5s ease-in-out infinite;
+    }
+
     .polaroid.active {
       position: fixed !important;
       top: 50% !important;
@@ -288,6 +325,8 @@
       padding: 12px 12px 30px 12px !important;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
       border-radius: 4px;
+      animation: none !important;
+      opacity: 1 !important;
     }
 
     .polaroid.active img {
@@ -330,18 +369,6 @@
     .back-to-message-btn:active {
       transform: translateX(-50%) scale(0.95);
       background: #ff7096;
-    }
-
-    @keyframes burstOutFromHeart {
-      0% {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0) rotate(0deg);
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
     }
 
     .floating-heart {
@@ -792,7 +819,7 @@
         card.className = 'polaroid';
         card.style.top = item.top;
         card.style.left = item.left;
-        card.style.transform = `rotate(${item.rotate})`;
+        card.style.setProperty('--target-rotate', item.rotate);
         card.style.zIndex = index + 1;
 
         card.innerHTML = `
@@ -800,6 +827,16 @@
           <img src="${item.img}" alt="photo">
           <div class="caption">${item.text}</div>
         `;
+
+        // สั่งให้เด้งออกมาพร้อมกันจากจุดศูนย์กลาง
+        card.classList.add('animate-burst');
+
+        // เมื่อแอนิเมชันกระจายตัวเสร็จ ให้เริ่มแอนิเมชันลอยเด้งดึ๋ง
+        setTimeout(() => {
+          card.classList.remove('animate-burst');
+          card.style.opacity = '1';
+          card.classList.add('idle-bounce');
+        }, 750);
 
         card.addEventListener('click', (e) => {
           e.stopPropagation();
