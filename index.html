@@ -30,7 +30,6 @@
       touch-action: none;
     }
 
-    /* ปรับกรอบหลักให้เต็มจอสมบูรณ์แบบ */
     .app-viewport {
       position: relative;
       width: 100vw;
@@ -39,7 +38,6 @@
       overflow: hidden;
     }
 
-    /* คอนเทนเนอร์การ์ด */
     .card-container {
       position: absolute;
       top: 0;
@@ -49,7 +47,6 @@
       overflow: hidden;
     }
 
-    /* ชั้นที่ 3: ข้อความ (กระดาษ3.png) */
     .layer-3-message {
       position: absolute;
       top: 0;
@@ -60,7 +57,6 @@
       z-index: 1;
     }
 
-    /* ชั้นที่ 2: Canvas กระดาษเผา (กระดาษ2.png) */
     #burnCanvas {
       position: absolute;
       top: 0;
@@ -70,7 +66,6 @@
       z-index: 2;
     }
 
-    /* ชั้นที่ 1: กล่อง (กล่อง.png) */
     .layer-1-box {
       position: absolute;
       top: 0;
@@ -82,7 +77,6 @@
       pointer-events: none;
     }
 
-    /* Canvas สำหรับวาดไฟไหม้ */
     #fxCanvas {
       position: absolute;
       top: 0;
@@ -93,7 +87,6 @@
       pointer-events: none;
     }
 
-    /* แถบถูจุดไม้ขีดไฟ */
     .striker-fixed-container {
       position: absolute;
       bottom: 30px;
@@ -118,7 +111,6 @@
       background-image: repeating-linear-gradient(45deg, #2c1b18 0, #2c1b18 5px, #3e2723 5px, #3e2723 10px);
     }
 
-    /* ก้านไม้ขีดไฟ */
     .matchstick-item {
       width: 450px;
       height: 120px;
@@ -133,18 +125,18 @@
     .matchstick-item:active { cursor: grabbing; }
     .matchstick-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-    /* อิโมจิหัวใจสีชมพูพาสเทล */
+    /* ปรับตำแหน่งขยับมาทางซ้ายนิดนึง */
     .bouncing-heart-trigger {
       position: absolute;
       bottom: 80px;
-      left: 50%;
+      left: 42%;
       transform: translateX(-50%);
       font-size: 65px;
       cursor: pointer;
       z-index: 150;
       display: none;
       animation: heartBounce 1.2s infinite ease-in-out;
-      filter: drop-shadow(0 6px 14px rgba(255, 182, 193, 0.8));
+      filter: drop-shadow(0 6px 14px rgba(255, 183, 206, 0.8));
     }
 
     @keyframes heartBounce {
@@ -152,7 +144,6 @@
       50% { transform: translateX(-50%) scale(1.3) rotate(-5deg); }
     }
 
-    /* Overlay ป๊อปอัปหัวใจดวงใหญ่เต็มหน้าจอ */
     .big-heart-modal {
       position: absolute;
       top: 0;
@@ -168,7 +159,6 @@
       animation: fadeIn 0.4s ease;
     }
 
-    /* คอนเทนเนอร์หัวใจดวงใหญ่เติมน้ำสีชมพูพาสเทล */
     .big-heart-container {
       position: relative;
       width: 230px;
@@ -176,31 +166,31 @@
       cursor: pointer;
     }
 
+    /* เส้นขอบสีชมพูพาสเทลแท้ */
     .big-heart-shape {
       width: 100%;
       height: 100%;
       background-color: #fff0f5;
       clip-path: path('M115,190 C115,190 20,125 20,65 C20,32 42,15 72,15 C91,15 105,25 115,38 C125,25 139,15 158,15 C188,15 210,32 210,65 C210,125 115,190 115,190 Z');
       position: relative;
-      border: 3px solid #ffb6c1;
-      box-shadow: 0 10px 25px rgba(255, 182, 193, 0.4);
+      border: 3px solid #ffb7ce;
+      box-shadow: 0 10px 25px rgba(255, 183, 206, 0.4);
     }
 
-    /* น้ำสีชมพูพาสเทล */
+    /* น้ำสีชมพูพาสเทลบริสุทธิ์ ไม่ส้ม ไม่พีช */
     .heart-water-fill {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 0%;
-      background: linear-gradient(0deg, #ffb6c1, #ffc0cb, #ffe4e1);
+      background: linear-gradient(0deg, #ffb7ce, #ffc2d1, #ffd6e0);
       transition: height 0.12s ease-out;
-      box-shadow: 0 -4px 12px rgba(255, 182, 193, 0.6);
+      box-shadow: 0 -4px 12px rgba(255, 183, 206, 0.6);
     }
 
-    /* ตัวหนังสือใต้หัวใจพาสเทล */
     .fill-instruction {
-      color: #ff8da1;
+      color: #ff8ba7;
       font-size: 15px;
       margin-top: 25px;
       font-weight: 500;
@@ -213,7 +203,6 @@
       50% { opacity: 1; }
     }
 
-    /* Modal ป๊อปอัปโพลารอยด์ */
     .polaroid-overlay {
       position: absolute;
       top: 0;
@@ -230,7 +219,6 @@
 
     .polaroid-container { position: relative; width: 100%; height: 100%; }
 
-    /* ปรับขนาดรูปโพลารอยด์ให้สวยงามสมส่วน */
     .polaroid {
       position: absolute;
       width: 135px;
@@ -251,46 +239,56 @@
       display: block;
     }
 
-    /* ตัวหนังสือใต้รูปขยายขนาดพอดี ไม่ใหญ่เกินไป */
+    /* ตัวหนังสือใต้รูปเป็นสีดำ */
     .polaroid .caption {
       display: none;
       text-align: center;
-      font-size: 12px;
-      color: #ff69b4;
-      margin-top: 8px;
+      font-size: 13px;
+      color: #000000;
+      margin-top: 10px;
       font-weight: 500;
       line-height: 1.3;
     }
 
-    /* ปุ่มปิดมุมขวาบนของรูปขยาย */
     .polaroid .close-card-btn {
       display: none;
       position: absolute;
       top: -10px;
       right: -10px;
-      width: 24px;
-      height: 24px;
-      background: #ff69b4;
+      width: 26px;
+      height: 26px;
+      background: #ff8ba7;
       color: white;
       border-radius: 50%;
       text-align: center;
-      line-height: 24px;
-      font-size: 12px;
+      line-height: 26px;
+      font-size: 13px;
       font-weight: bold;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       cursor: pointer;
+      z-index: 10;
     }
 
-    /* เมื่อกดขยายรูปเต็มหน้าจอ */
+    /* รูปขยาย: แสดงขนาดเต็มของรูปโดยไม่โดนตัดขอบ */
     .polaroid.active {
       position: fixed !important;
       top: 50% !important;
       left: 50% !important;
-      transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+      transform: translate(-50%, -50%) scale(1) rotate(0deg) !important;
       z-index: 999 !important;
-      width: 170px !important;
-      padding: 10px 10px 14px 10px !important;
+      width: 82vw !important;
+      max-width: 320px !important;
+      height: auto !important;
+      padding: 12px 12px 16px 12px !important;
       box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
+    }
+
+    .polaroid.active img {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 60vh !important;
+      object-fit: contain !important;
+      background-color: #f8f8f8;
     }
 
     .polaroid.active .caption {
@@ -302,13 +300,12 @@
       display: block !important;
     }
 
-    /* ปุ่มกดกลับไปดูหน้าข้อความ */
     .back-to-message-btn {
       position: absolute;
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: #ffb6c1;
+      background: #ffb7ce;
       color: #ffffff;
       border: none;
       padding: 10px 22px;
@@ -317,13 +314,13 @@
       font-weight: 500;
       cursor: pointer;
       z-index: 400;
-      box-shadow: 0 4px 15px rgba(255, 182, 193, 0.6);
+      box-shadow: 0 4px 15px rgba(255, 183, 206, 0.6);
       transition: transform 0.2s, background-color 0.2s;
     }
 
     .back-to-message-btn:active {
       transform: translateX(-50%) scale(0.95);
-      background: #ff8da1;
+      background: #ff8ba7;
     }
 
     @keyframes burstOutFromHeart {
@@ -338,14 +335,13 @@
       }
     }
 
-    /* อิโมจิหัวใจชมพูพาสเทลลอยกระจาย */
     .floating-heart {
       position: absolute;
       pointer-events: none;
       z-index: 350;
       font-size: 26px;
       animation: floatUp 2.2s ease-out forwards;
-      filter: drop-shadow(0 2px 6px rgba(255, 182, 193, 0.5));
+      filter: drop-shadow(0 2px 6px rgba(255, 183, 206, 0.5));
     }
 
     @keyframes floatUp {
@@ -373,22 +369,18 @@
       <canvas id="fxCanvas"></canvas>
     </div>
 
-    <!-- แถบถูจุดไม้ขีด -->
     <div class="striker-fixed-container" id="strikerContainer">
       <div class="matchbox-striker" id="strikerStrip">
-        ถูไม้ขีดตรงนี้ 2-3 รอบ 🔥
+        ถูไม้ขีดตรงนี้ 5-6 รอบ 🔥
       </div>
     </div>
 
-    <!-- ไม้ขีด -->
     <div class="matchstick-item" id="draggableMatch">
       <img id="matchImg" src="ไม้ขีด.png" alt="ไม้ขีด">
     </div>
 
-    <!-- อิโมจิหัวใจสีชมพูพาสเทล -->
     <div class="bouncing-heart-trigger" id="heartTrigger">💗</div>
 
-    <!-- ป๊อปอัปหัวใจดวงใหญ่บนพื้นหลังสีขาว -->
     <div class="big-heart-modal" id="heartModal">
       <div class="big-heart-container" id="bigHeartContainer">
         <div class="big-heart-shape">
@@ -398,7 +390,6 @@
       <p class="fill-instruction">แตะหรือกดค้างเพื่อเติมความรัก ✨</p>
     </div>
 
-    <!-- โพลารอยด์ป๊อปอัป -->
     <div class="polaroid-overlay" id="polaroidOverlay">
       <div class="polaroid-container" id="polaroidContainer"></div>
       <button class="back-to-message-btn" id="backBtn">🔙 ดูข้อความอีกครั้ง</button>
@@ -567,7 +558,8 @@
             frictionScore += moveDistance;
             createSparks(relativeX, relativeY, 3, 10);
 
-            if (frictionScore > 280) {
+            /* ปรับเพิ่มค่าเพื่อให้ติดยากขึ้น ต้องถูประมาณ 5-6 รอบ */
+            if (frictionScore > 750) {
               isLit = true;
               matchImg.src = 'ไม้ขีดไฟ.png';
               strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลางกระดาษ';
@@ -678,12 +670,10 @@
     }
     mainFxLoop();
 
-    /* --- กดหัวใจเปิดหน้าจอเติมน้ำ --- */
     const heartModal = document.getElementById('heartModal');
     const waterFill = document.getElementById('waterFill');
     const bigHeartContainer = document.getElementById('bigHeartContainer');
 
-    /* รีเซ็ตระดับน้ำให้เติมใหม่ได้เสมอ */
     heartTrigger.addEventListener('click', () => {
       waterLevel = 0;
       waterFill.style.height = '0%';
@@ -730,7 +720,6 @@
     }, { passive: false });
     window.addEventListener('touchend', stopWatering);
 
-    /* --- อิโมจิหัวใจชมพูพาสเทลลอยกระจาย --- */
     const pastelHearts = ['💗', '💖', '💕', '🌸', '✨'];
 
     function createFloatingHearts(count = 1) {
@@ -799,7 +788,6 @@
           }
         });
 
-        /* ปุ่มปิดเมื่อกดรูปขยาย */
         const closeBtn = card.querySelector('.close-card-btn');
         closeBtn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -810,12 +798,10 @@
       });
     }
 
-    /* ปิดรูปขยายเมื่อกดพื้นที่ว่าง */
     document.getElementById('polaroidOverlay').addEventListener('click', () => {
       document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
     });
 
-    /* ปุ่มกดกลับไปดูหน้าข้อความ */
     backBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       document.getElementById('polaroidOverlay').style.display = 'none';
