@@ -4,20 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anniversary Card - Realistic Burn</title>
+  <!-- นำเข้าฟอนต์ Kanit จาก Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
+      font-family: 'Kanit', sans-serif;
     }
 
     body {
-      background-color: #ffffff; /* พื้นหลังสีขาวตามขอ */
+      background-color: #ffffff;
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* คอนเทนเนอร์การ์ดเต็มจอ */
@@ -74,42 +79,43 @@
       pointer-events: none;
     }
 
-    /* --- ส่วนกล่องไม้ขีดไฟซ้ายล่าง (ขยายใหญ่ขึ้น 20%) --- */
+    /* --- ส่วนกล่องไม้ขีดไฟซ้ายล่าง --- */
     .matchbox-area {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      bottom: 25px;
+      left: 25px;
       z-index: 10;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 8px;
+      align-items: flex-start;
+      gap: 12px;
     }
 
+    /* แถบข้างกล่องสำหรับจุด */
     .matchbox-striker {
-      width: 156px; /* ขยายขึ้น 20% */
-      height: 48px;
-      background: #4a2c11;
-      border: 3px solid #2d1908;
-      border-radius: 6px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      position: relative;
-      cursor: pointer;
+      width: 180px;
+      height: 52px;
+      background: #3e2723;
+      border: 3px solid #271714;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #d7ccc8;
-      font-size: 12px;
-      font-weight: bold;
-      background-image: repeating-linear-gradient(45deg, #3e2723 0, #3e2723 4px, #4e342e 4px, #4e342e 8px);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      background-image: repeating-linear-gradient(45deg, #2c1b18 0, #2c1b18 5px, #3e2723 5px, #3e2723 10px);
     }
 
+    /* ก้านไม้ขีดไฟจับถูได้อิสระ */
     .matchstick-item {
-      width: 84px; /* ขยายขึ้น 20% */
-      height: 18px;
+      width: 90px;
+      height: 22px;
       cursor: grab;
       position: relative;
-      transition: transform 0.1s;
+      touch-action: none;
     }
 
     .matchstick-item:active {
@@ -120,15 +126,16 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      pointer-events: none;
     }
 
     /* เปลวไฟขยับได้ตรงหัวไม้ขีด */
     .flame-animated {
       position: absolute;
-      top: -25px;
-      left: -10px;
-      width: 30px;
-      height: 40px;
+      top: -28px;
+      left: -12px;
+      width: 32px;
+      height: 42px;
       background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffeb3b 25%, #ff9800 60%, transparent 80%);
       border-radius: 50% 50% 35% 35%;
       filter: drop-shadow(0 0 10px #ff5722);
@@ -145,8 +152,8 @@
     /* ส่วนหัวใจกดค้าง */
     .controls {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: 25px;
+      right: 25px;
       z-index: 10;
     }
 
@@ -155,15 +162,21 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 14px 22px;
       border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
       animation: fadeIn 1s forwards;
     }
 
+    .heart-section p {
+      color: #d81b60;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
     .heart-btn {
-      font-size: 45px;
+      font-size: 48px;
       cursor: pointer;
       filter: grayscale(100%);
       transition: transform 0.1s;
@@ -174,7 +187,7 @@
     .progress-bar-bg {
       width: 180px;
       height: 10px;
-      background-color: #eee;
+      background-color: #f0f0f0;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -204,9 +217,9 @@
 
     .polaroid {
       position: absolute;
-      width: 190px;
+      width: 200px;
       background: white;
-      padding: 10px 10px 20px 10px;
+      padding: 12px 12px 22px 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       border-radius: 4px;
       cursor: pointer;
@@ -214,8 +227,8 @@
       animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
     }
 
-    .polaroid img { width: 100%; height: 150px; object-fit: cover; }
-    .polaroid .caption { text-align: center; font-size: 13px; color: #333; margin-top: 8px; font-weight: bold; }
+    .polaroid img { width: 100%; height: 155px; object-fit: cover; }
+    .polaroid .caption { text-align: center; font-size: 13px; color: #333; margin-top: 10px; font-weight: 400; }
     .polaroid.active { transform: scale(1.6) translate(-25%, -25%) !important; z-index: 999 !important; }
 
     @keyframes popUp {
@@ -253,7 +266,7 @@
   <!-- กล่องไม้ขีดมุมซ้ายล่าง -->
   <div class="matchbox-area">
     <div class="matchbox-striker" id="strikerStrip">
-      ถูไม้ขีดตรงนี้ 🔥
+      จับไม้ขีดลากถูตรงนี้ 🔥
     </div>
     <div class="matchstick-item" id="draggableMatch">
       <div class="flame-animated" id="flame"></div>
@@ -264,7 +277,7 @@
   <!-- ส่วนหัวใจกดค้าง -->
   <div class="controls">
     <div class="heart-section" id="heartSection">
-      <p style="color: #c2185b; font-size: 13px; font-weight: bold;">กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
+      <p>กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
       <div class="heart-btn" id="heartBtn">❤️</div>
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progressFill"></div>
@@ -289,11 +302,12 @@
     const strikerStrip = document.getElementById('strikerStrip');
 
     let isLit = false;
-    let strikeCount = 0;
+    let frictionScore = 0; // สะสมแรงถู
     let isDraggingMatch = false;
     let autoBurning = false;
     let burnRadius = 0;
     let maxBurnRadius = 0;
+    let lastX = 0, lastY = 0;
 
     // ปรับขนาด Canvas เต็มจอ
     function resizeCanvas() {
@@ -320,52 +334,75 @@
       if (bgMusic.paused) bgMusic.play();
     }, { once: true });
 
-    /* --- ระบบลากไม้ขีดไฟ --- */
-    let matchX = 0, matchY = 0;
-
-    matchEl.addEventListener('mousedown', (e) => {
+    /* --- ระบบจับลากไม้ขีดถูเองแบบสมจริง --- */
+    function onStart(e) {
       isDraggingMatch = true;
-      e.preventDefault();
-    });
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+      lastX = clientX;
+      lastY = clientY;
+    }
 
-    window.addEventListener('mousemove', (e) => {
+    function onMove(e) {
       if (!isDraggingMatch) return;
 
-      matchX = e.clientX;
-      matchY = e.clientY;
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
+      // คำนวณระยะการถูขยับ
+      const deltaX = Math.abs(clientX - lastX);
+      const deltaY = Math.abs(clientY - lastY);
+      const moveDistance = Math.hypot(deltaX, deltaY);
+
+      lastX = clientX;
+      lastY = clientY;
+
+      // ปรับตำแหน่งก้านไม้ขีดตามมือ/เมาส์
       matchEl.style.position = 'fixed';
-      matchEl.style.left = (matchX - 20) + 'px';
-      matchEl.style.top = (matchY - 10) + 'px';
+      matchEl.style.left = (clientX - 15) + 'px';
+      matchEl.style.top = (clientY - 10) + 'px';
       matchEl.style.zIndex = '99';
 
-      // เช็คการถูกับแถบข้างกล่อง
+      // เช็คการถูบนแถบข้างกล่อง
       if (!isLit) {
         const strikerRect = strikerStrip.getBoundingClientRect();
-        if (matchX >= strikerRect.left && matchX <= strikerRect.right &&
-            matchY >= strikerRect.top && matchY <= strikerRect.bottom) {
-          strikeCount += 1;
-          if (strikeCount > 15) { // ถูประมาณ 3-4 รอบติดไฟ
-            isLit = true;
-            flameEl.style.display = 'block';
-            strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลาง';
+        if (clientX >= strikerRect.left && clientX <= strikerRect.right &&
+            clientY >= strikerRect.top && clientY <= strikerRect.bottom) {
+          
+          if (moveDistance > 2) { // มีการเคลื่อนที่ขัดถูจริงๆ
+            frictionScore += moveDistance;
+            if (frictionScore > 250) { // เมื่อสะสมแรงถูได้ตามกำหนด
+              isLit = true;
+              flameEl.style.display = 'block';
+              strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลาง';
+            }
           }
         }
       }
 
-      // เช็คเมื่อนำไม้ขีดติดไฟไปแตะบริเวณตรงกลางจอ
+      // นำไม้ขีดไฟไปจ่อตรงกลางหน้าจอเพื่อเริ่มไหม้อัตโนมัติ
       if (isLit && !autoBurning) {
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2;
-        const distFromCenter = Math.hypot(matchX - centerX, matchY - centerY);
+        const distFromCenter = Math.hypot(clientX - centerX, clientY - centerY);
 
         if (distFromCenter < 120) {
           startAutoBurn(centerX, centerY);
         }
       }
-    });
+    }
 
-    window.addEventListener('mouseup', () => { isDraggingMatch = false; });
+    function onEnd() {
+      isDraggingMatch = false;
+    }
+
+    matchEl.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+
+    matchEl.addEventListener('touchstart', onStart);
+    window.addEventListener('touchmove', onMove);
+    window.addEventListener('touchend', onEnd);
 
     /* --- ระบบกระดาษไหม้อัตโนมัติจากตรงกลาง --- */
     function startAutoBurn(cx, cy) {
@@ -374,7 +411,7 @@
 
       function burnStep() {
         if (burnRadius < maxBurnRadius) {
-          burnRadius += 3.5; // ความเร็วการลุกลาม
+          burnRadius += 3.5;
 
           // 1. เจาะรูไหม้กระดาษชั้นที่ 2
           ctx.save();
