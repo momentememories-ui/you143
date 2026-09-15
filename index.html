@@ -206,70 +206,124 @@
       50% { opacity: 1; }
     }
 
+    /* --- ปรับแต่งหน้ารูปโพลารอยด์ และพื้นหลัง --- */
     .polaroid-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #fff0f4;
+      background: radial-gradient(circle at center, #fff5f8 0%, #ffe3ed 60%, #ffd0e0 100%);
       backdrop-filter: blur(8px);
       z-index: 300;
       display: none;
       justify-content: center;
       align-items: center;
       animation: fadeIn 0.4s ease;
+      overflow: hidden;
     }
 
-    .polaroid-container { position: relative; width: 100%; height: 100%; }
+    /* ตกแต่งหัวเรื่องด้านบนหน้ารูปโพลารอยด์ */
+    .polaroid-header-title {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      font-weight: 600;
+      color: #ff6b8b;
+      text-shadow: 0 2px 8px rgba(255, 255, 255, 0.8);
+      z-index: 310;
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 6px 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(255, 183, 206, 0.3);
+    }
+
+    /* ตกแต่งแบคกราวด์ดาว/ประกายลอย */
+    .bg-sparkle {
+      position: absolute;
+      pointer-events: none;
+      color: #ffb3c6;
+      font-size: 16px;
+      opacity: 0.6;
+      animation: sparkleFloat 4s infinite ease-in-out;
+    }
+
+    @keyframes sparkleFloat {
+      0%, 100% { transform: translateY(0) scale(0.8); opacity: 0.3; }
+      50% { transform: translateY(-15px) scale(1.2); opacity: 0.8; }
+    }
+
+    .polaroid-container { 
+      position: relative; 
+      width: 100%; 
+      height: 100%; 
+    }
 
     /* สไตล์โพลารอยด์คลาสสิก (ขอบขาว ล่างกว้าง) */
     .polaroid {
       position: absolute;
-      width: 130px;
+      width: 140px;
       background: #ffffff;
-      padding: 10px 10px 24px 10px; /* เว้นขอบล่างให้เหมือนรูปโพลารอยด์จริง */
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(255, 183, 206, 0.2);
-      border-radius: 4px;
+      padding: 10px 10px 18px 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(255, 183, 206, 0.3);
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27);
       animation: burstOutFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
+    .polaroid-img-wrapper {
+      width: 100%;
+      height: 120px;
+      background-color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    /* ปรับขนาดรูปภาพให้แสดงแบบ contain เพื่อเห็นรูปต้นฉบับครบเต็มใบ */
     .polaroid img {
       width: 100%;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 2px;
+      height: 100%;
+      object-fit: contain;
       display: block;
-      background-color: #f8f8f8;
     }
 
     .polaroid .caption {
       display: none;
       text-align: center;
       font-size: 13px;
-      color: #333333;
-      margin-top: 12px;
+      color: #444444;
+      margin-top: 10px;
       font-weight: 500;
       line-height: 1.3;
+      width: 100%;
     }
 
     .polaroid .close-card-btn {
       display: none;
       position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 26px;
-      height: 26px;
-      background: #ff8ba7;
+      top: -10px;
+      right: -10px;
+      width: 28px;
+      height: 28px;
+      background: #ff758f;
       color: white;
       border-radius: 50%;
       text-align: center;
-      line-height: 26px;
-      font-size: 13px;
+      line-height: 28px;
+      font-size: 14px;
       font-weight: bold;
-      box-shadow: 0 2px 8px rgba(255, 139, 167, 0.4);
+      box-shadow: 0 3px 8px rgba(255, 117, 143, 0.4);
       cursor: pointer;
       z-index: 10;
     }
@@ -281,19 +335,24 @@
       left: 50% !important;
       transform: translate(-50%, -50%) scale(1) rotate(0deg) !important;
       z-index: 999 !important;
-      width: 80vw !important;
-      max-width: 300px !important;
+      width: 85vw !important;
+      max-width: 320px !important;
       height: auto !important;
-      padding: 14px 14px 28px 14px !important;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
-      border-radius: 6px;
+      padding: 14px 14px 22px 14px !important;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25) !important;
+      border-radius: 8px;
+    }
+
+    .polaroid.active .polaroid-img-wrapper {
+      height: 280px !important;
+      max-height: 50vh !important;
+      background-color: #f7f7f7;
     }
 
     .polaroid.active img {
       width: 100% !important;
-      height: 240px !important;
-      object-fit: cover !important;
-      border-radius: 3px;
+      height: 100% !important;
+      object-fit: contain !important;
     }
 
     .polaroid.active .caption {
@@ -310,22 +369,22 @@
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: #ffb7ce;
+      background: linear-gradient(135deg, #ff8ba7, #ff5c8a);
       color: #ffffff;
       border: none;
-      padding: 10px 22px;
+      padding: 10px 24px;
       border-radius: 25px;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       z-index: 400;
-      box-shadow: 0 4px 15px rgba(255, 183, 206, 0.6);
+      box-shadow: 0 4px 15px rgba(255, 92, 138, 0.4);
       transition: transform 0.2s, background-color 0.2s;
     }
 
     .back-to-message-btn:active {
       transform: translateX(-50%) scale(0.95);
-      background: #ff8ba7;
+      background: #ff5c8a;
     }
 
     @keyframes burstOutFromHeart {
@@ -395,7 +454,16 @@
       <p class="fill-instruction">แตะหรือกดค้างเพื่อเติมความรัก ✨</p>
     </div>
 
+    <!-- หน้ารูปโพลารอยด์ที่เพิ่มการตกแต่งพื้นหลังแล้ว -->
     <div class="polaroid-overlay" id="polaroidOverlay">
+      <!-- องค์ประกอบตกแต่งพื้นหลัง -->
+      <div class="polaroid-header-title">Our Sweet Memories ✨</div>
+      <div class="bg-sparkle" style="top: 15%; left: 10%; animation-delay: 0s;">✨</div>
+      <div class="bg-sparkle" style="top: 25%; right: 12%; animation-delay: 1s;">🌸</div>
+      <div class="bg-sparkle" style="top: 65%; left: 8%; animation-delay: 1.5s;">💖</div>
+      <div class="bg-sparkle" style="top: 75%; right: 15%; animation-delay: 0.5s;">✨</div>
+      <div class="bg-sparkle" style="top: 45%; left: 85%; animation-delay: 2s;">🎀</div>
+
       <div class="polaroid-container" id="polaroidContainer"></div>
       <button class="back-to-message-btn" id="backBtn">ย้อนกลับ</button>
     </div>
@@ -768,10 +836,10 @@
     }
 
     const polaroidData = [
-      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '22%', left: '12%', rotate: '-8deg' },
-      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '20%', left: '50%', rotate: '7deg' },
-      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '48%', left: '15%', rotate: '-5deg' },
-      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '46%', left: '50%', rotate: '10deg' },
+      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '22%', left: '10%', rotate: '-8deg' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '20%', left: '52%', rotate: '7deg' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '48%', left: '12%', rotate: '-5deg' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '46%', left: '52%', rotate: '10deg' },
       { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '34%', left: '32%', rotate: '2deg' }
     ];
 
@@ -789,9 +857,12 @@
         card.style.transform = `rotate(${item.rotate})`;
         card.style.zIndex = index + 1;
 
+        /* ครอบรูปภาพด้วย polaroid-img-wrapper เพื่อรักษาสัดส่วน */
         card.innerHTML = `
           <div class="close-card-btn">✕</div>
-          <img src="${item.img}" alt="photo">
+          <div class="polaroid-img-wrapper">
+            <img src="${item.img}" alt="photo">
+          </div>
           <div class="caption">${item.text}</div>
         `;
 
