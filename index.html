@@ -125,11 +125,11 @@
     .matchstick-item:active { cursor: grabbing; }
     .matchstick-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-    /* ปรับปุ่มหัวใจ: ลบกรอบสี่เหลี่ยม ลบพื้นหลัง ลบเงาขอบ เหลือเฉพาะตัวหัวใจ */
+    /* ปรับปุ่มหัวใจ: ขยับมาทางซ้าย (left: 42%) */
     .bouncing-heart-trigger {
       position: absolute;
       bottom: 80px;
-      left: 50%;
+      left: 42%;
       transform: translateX(-50%);
       font-size: 75px;
       cursor: pointer;
@@ -206,15 +206,14 @@
       50% { opacity: 1; }
     }
 
-    /* ตกแต่งพื้นหลังโพลารอยด์ไม่ให้โล่ง */
+    /* ปรับพื้นหลังเป็นสีขาวล้วน ไม่มีลวดลาย */
     .polaroid-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #fff5f7 0%, #fffbfd 50%, #f7f1f5 100%);
-      backdrop-filter: blur(8px);
+      background: #ffffff;
       z-index: 300;
       display: none;
       justify-content: center;
@@ -223,85 +222,13 @@
       overflow: hidden;
     }
 
-    /* เพิ่มลวดลาย Scrapbook & แสงระยิบระยับในพื้นหลัง */
-    .polaroid-overlay::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-image: radial-gradient(#ffa6c9 0.8px, transparent 0.8px);
-      background-size: 24px 24px;
-      opacity: 0.22;
-      pointer-events: none;
-    }
-
-    /* ราวไฟประดับด้านบน (Fairy Lights) */
-    .fairy-lights {
-      position: absolute;
-      top: -10px;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      background-image: radial-gradient(circle, #ffeb3b 3px, transparent 4px),
-                        radial-gradient(circle, #ff4081 3px, transparent 4px),
-                        radial-gradient(circle, #00e676 3px, transparent 4px);
-      background-size: 40px 15px;
-      background-position: 0 20px, 15px 25px, 30px 18px;
-      background-repeat: repeat-x;
-      opacity: 0.85;
-      z-index: 301;
-      filter: drop-shadow(0 2px 5px rgba(255, 235, 59, 0.6));
-    }
-    
-    .fairy-lights::after {
-      content: "";
-      position: absolute;
-      top: 15px; left: 0; width: 100%; height: 1.5px;
-      background: rgba(0, 0, 0, 0.08);
-    }
-
-    /* หัวข้อของหน้าอัลบั้ม */
-    .overlay-title {
-      position: absolute;
-      top: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 310;
-      width: 90%;
-      pointer-events: none;
-    }
-
-    .overlay-title h2 {
-      font-family: 'Kanit', sans-serif;
-      font-size: 21px;
-      color: #ff527b;
-      text-shadow: 0 1px 3px rgba(255, 139, 167, 0.4);
-      margin-bottom: 2px;
-    }
-
-    .overlay-title p {
-      font-size: 11px;
-      color: #8b6e75;
-      letter-spacing: 1px;
-    }
-
-    /* องค์ประกอบตกแต่งน่ารักๆ แซมพื้นหลัง (สติกเกอร์ / ตัวการ์ตูน) */
-    .bg-deco {
-      position: absolute;
-      font-size: 18px;
-      opacity: 0.25;
-      pointer-events: none;
-      z-index: 301;
-    }
-
     .polaroid-container { position: relative; width: 100%; height: 100%; }
 
-    /* สไตล์โพลารอยด์คลาสสิก (ขอบขาว ล่างกว้าง) */
     .polaroid {
       position: absolute;
       width: 125px;
       background: #ffffff;
-      padding: 9px 9px 26px 9px; /* เว้นขอบล่างให้เหมือนรูปโพลารอยด์จริง */
+      padding: 9px 9px 26px 9px;
       box-shadow: 0 6px 14px rgba(0, 0, 0, 0.09), 0 2px 4px rgba(255, 183, 206, 0.15);
       border-radius: 2px;
       cursor: pointer;
@@ -309,12 +236,11 @@
       animation: burstOutFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
     }
 
-    /* ปรับแต่งส่วนภาพให้พอดีกับรูปต้นฉบับ ไม่โดนครอป */
     .polaroid img {
       width: 100%;
       height: auto;
-      max-height: 105px; /* คุมความสูงในหน้าแสดงย่อ */
-      object-fit: contain; /* รักษาสัดส่วน ไม่ตัดภาพ */
+      max-height: 105px;
+      object-fit: contain;
       border-radius: 1px;
       display: block;
       background-color: #fcf8fa;
@@ -349,7 +275,6 @@
       z-index: 10;
     }
 
-    /* โพลารอยด์ตอนกดขยายใหญ่ */
     .polaroid.active {
       position: fixed !important;
       top: 51% !important;
@@ -364,12 +289,11 @@
       border-radius: 4px;
     }
 
-    /* รูปต้นฉบับตอนขยายใหญ่ แบบเห็นทั้งหมดร้อยเปอร์เซ็นต์ */
     .polaroid.active img {
       width: 100% !important;
       height: auto !important;
-      max-height: 52vh !important; /* จำกัดไม่ให้เกินจอแต่แสดงเต็มรูป */
-      object-fit: contain !important; /* ป้องกันภาพแหว่งภาพขาด */
+      max-height: 52vh !important;
+      object-fit: contain !important;
       border-radius: 2px;
       background-color: #ffffff;
     }
@@ -475,24 +399,6 @@
     </div>
 
     <div class="polaroid-overlay" id="polaroidOverlay">
-      <!-- ไฟประดับ ตกแต่งด้านบน -->
-      <div class="fairy-lights"></div>
-
-      <!-- หัวข้อความทรงจำ -->
-      <div class="overlay-title">
-        <h2>✨ อัลบั้มความทรงจำของเรา ✨</h2>
-        <p>OUR HAPPY MEMORIES</p>
-      </div>
-
-      <!-- ตัวประดับน่ารักๆ รอบจอ แก้อาการโล่ง -->
-      <div class="bg-deco" style="top: 15%; left: 8%;">🎞️</div>
-      <div class="bg-deco" style="top: 18%; right: 7%;">📸</div>
-      <div class="bg-deco" style="top: 40%; left: 4%;">💗</div>
-      <div class="bg-deco" style="top: 53%; right: 5%;">🌸</div>
-      <div class="bg-deco" style="top: 75%; left: 9%;">⭐</div>
-      <div class="bg-deco" style="top: 72%; right: 11%;">🎵</div>
-      <div class="bg-deco" style="bottom: 12%; left: 35%;">💌</div>
-
       <div class="polaroid-container" id="polaroidContainer"></div>
       <button class="back-to-message-btn" id="backBtn">ย้อนกลับ</button>
     </div>
@@ -512,6 +418,8 @@
     const strikerContainer = document.getElementById('strikerContainer');
     const heartTrigger = document.getElementById('heartTrigger');
     const backBtn = document.getElementById('backBtn');
+
+    let continuousHeartsInterval = null;
 
     function playAudioOnFirstInteraction() {
       if (bgMusic && bgMusic.paused) {
@@ -864,12 +772,13 @@
       }, 120);
     }
 
+    /* ขยับหน้ารูปโพลารอยด์ลงมาอีก 5% (เพิ่มค่า top) */
     const polaroidData = [
-      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '23%', left: '11%', rotate: '-7deg' },
-      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '21%', left: '50%', rotate: '6deg' },
-      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '50%', left: '13%', rotate: '-4deg' },
-      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '48%', left: '51%', rotate: '8deg' },
-      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '35%', left: '32%', rotate: '2deg' }
+      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '28%', left: '11%', rotate: '-7deg' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '26%', left: '50%', rotate: '6deg' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '55%', left: '13%', rotate: '-4deg' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '53%', left: '51%', rotate: '8deg' },
+      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '40%', left: '32%', rotate: '2deg' }
     ];
 
     function showPolaroidsSimultaneously() {
@@ -912,6 +821,14 @@
 
         container.appendChild(card);
       });
+
+      /* สร้างเอฟเฟกต์ให้อิโมจิหัวใจลอยขึ้นตลอดเวลาในหน้าโพลารอยด์ */
+      if (continuousHeartsInterval) clearInterval(continuousHeartsInterval);
+      continuousHeartsInterval = setInterval(() => {
+        if (overlay.style.display === 'flex') {
+          createFloatingHearts(1);
+        }
+      }, 400);
     }
 
     document.getElementById('polaroidOverlay').addEventListener('click', () => {
@@ -922,6 +839,10 @@
       e.stopPropagation();
       document.getElementById('polaroidOverlay').style.display = 'none';
       heartTrigger.style.display = 'block';
+      if (continuousHeartsInterval) {
+        clearInterval(continuousHeartsInterval);
+        continuousHeartsInterval = null;
+      }
     });
   </script>
 </body>
