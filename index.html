@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anniversary Card - Realistic Burn</title>
+  <title>Anniversary Card - Realistic Match Burn</title>
   <!-- นำเข้าฟอนต์ Kanit จาก Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,14 +56,14 @@
       z-index: 2;
     }
 
-    /* Canvas สำหรับวาดประกายไฟขอบไหม้ */
+    /* Canvas สำหรับวาดประกายไฟขอบไหม้ และสะเก็ดไฟแตกกระจาย */
     #fxCanvas {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 3;
+      z-index: 5;
       pointer-events: none;
     }
 
@@ -79,23 +79,18 @@
       pointer-events: none;
     }
 
-    /* --- ส่วนกล่องไม้ขีดไฟซุ่มวางมุมขวาล่าง --- */
-    .matchbox-area {
+    /* --- แถบที่ถูจุดไม้ขีดไฟ (วางตายตัวอยู่ซ้ายมือ) --- */
+    .striker-fixed-container {
       position: absolute;
       bottom: 30px;
-      right: 30px;
+      left: 30px;
       z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 15px;
       transition: opacity 0.5s ease;
     }
 
-    /* แถบข้างกล่องสำหรับจุด */
     .matchbox-striker {
-      width: 240px;
-      height: 60px;
+      width: 260px;
+      height: 65px;
       background: #3e2723;
       border: 3px solid #271714;
       border-radius: 8px;
@@ -104,18 +99,21 @@
       align-items: center;
       justify-content: center;
       color: #d7ccc8;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 400;
       letter-spacing: 0.5px;
       background-image: repeating-linear-gradient(45deg, #2c1b18 0, #2c1b18 5px, #3e2723 5px, #3e2723 10px);
     }
 
-    /* ก้านไม้ขีดไฟขยายใหญ่ขึ้น 200% */
+    /* --- ก้านไม้ขีดไฟขยายใหญ่ขึ้นอีก 200% --- */
     .matchstick-item {
-      width: 270px;
-      height: 66px;
+      width: 480px; /* ขยายใหญ่อีก 200% */
+      height: 120px;
       cursor: grab;
-      position: relative;
+      position: absolute;
+      bottom: 110px;
+      left: 30px;
+      z-index: 12;
       touch-action: none;
     }
 
@@ -130,27 +128,7 @@
       pointer-events: none;
     }
 
-    /* เปลวไฟขยับได้ตรงหัวไม้ขีด */
-    .flame-animated {
-      position: absolute;
-      top: -65px;
-      left: -20px;
-      width: 70px;
-      height: 90px;
-      background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffeb3b 25%, #ff9800 60%, transparent 80%);
-      border-radius: 50% 50% 35% 35%;
-      filter: drop-shadow(0 0 18px #ff5722);
-      animation: flameMotion 0.15s infinite alternate ease-in-out;
-      display: none;
-      pointer-events: none;
-    }
-
-    @keyframes flameMotion {
-      0% { transform: scale(0.9) rotate(-3deg); opacity: 0.9; }
-      100% { transform: scale(1.1) rotate(4deg); opacity: 1; }
-    }
-
-    /* ส่วนหัวใจกดค้าง (ซ่อนไว้ก่อน รอเผาเสร็จถึงขึ้น) */
+    /* ส่วนหัวใจกดค้าง (รอเผาเสร็จสิ้นค่อยแสดง) */
     .controls {
       position: absolute;
       bottom: 30px;
@@ -159,7 +137,7 @@
     }
 
     .heart-section {
-      display: none; /* ซ่อนไว้เริ่มต้น */
+      display: none;
       flex-direction: column;
       align-items: center;
       gap: 8px;
@@ -257,25 +235,26 @@
     <!-- ชั้นที่ 2: Canvas กระดาษเผา -->
     <canvas id="burnCanvas"></canvas>
 
-    <!-- Canvas แสดงประกายไฟ/ขอบไหม้ลุกลาม -->
+    <!-- Canvas สำหรับวาดไฟไหม้และสะเก็ดไฟ -->
     <canvas id="fxCanvas"></canvas>
 
     <!-- ชั้นที่ 1: กล่อง -->
     <img src="กล่อง.png" class="layer-1-box" alt="กล่อง">
   </div>
 
-  <!-- กล่องไม้ขีดมุมขวาล่าง -->
-  <div class="matchbox-area" id="matchboxArea">
+  <!-- แถบข้างกล่องสสำหรับถู (ตำแหน่งซ้ายมือ ล็อกห้ามขยับ) -->
+  <div class="striker-fixed-container" id="strikerContainer">
     <div class="matchbox-striker" id="strikerStrip">
-      จับไม้ขีดลากถูตรงนี้ 🔥
-    </div>
-    <div class="matchstick-item" id="draggableMatch">
-      <div class="flame-animated" id="flame"></div>
-      <img src="ไม้ขีด.png" alt="ไม้ขีด">
+      จับไม้ขีดมาถูที่นี่ 2-3 รอบ 🔥
     </div>
   </div>
 
-  <!-- ส่วนหัวใจกดค้าง (จะค่อยๆ แสดงขึ้นมาเมื่อเผากระดาษเสร็จเรียบร้อย) -->
+  <!-- ก้านไม้ขีดไฟ (ขนาดใหญ่พิเศษ) -->
+  <div class="matchstick-item" id="draggableMatch">
+    <img id="matchImg" src="ไม้ขีด.png" alt="ไม้ขีด">
+  </div>
+
+  <!-- ส่วนหัวใจกดค้าง -->
   <div class="controls">
     <div class="heart-section" id="heartSection">
       <p>กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
@@ -299,19 +278,21 @@
     const bgMusic = document.getElementById('bgMusic');
 
     const matchEl = document.getElementById('draggableMatch');
-    const flameEl = document.getElementById('flame');
+    const matchImg = document.getElementById('matchImg');
     const strikerStrip = document.getElementById('strikerStrip');
-    const matchboxArea = document.getElementById('matchboxArea');
+    const strikerContainer = document.getElementById('strikerContainer');
 
     let isLit = false;
-    let frictionScore = 0;
+    let frictionScore = 0; // คะแนนสะสมจากการถู 2-3 รอบ
     let isDraggingMatch = false;
     let autoBurning = false;
     let burnRadius = 0;
     let maxBurnRadius = 0;
     let lastX = 0, lastY = 0;
 
-    // ปรับขนาด Canvas เต็มจอ
+    // ระบบ Particles สะเก็ดไฟ
+    let particles = [];
+
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -336,6 +317,47 @@
       if (bgMusic.paused) bgMusic.play();
     }, { once: true });
 
+    /* --- สร้างสะเก็ดไฟกระจาย (Spark Particles) --- */
+    function createSparks(x, y, count = 5) {
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8 - 2,
+          size: Math.random() * 4 + 2,
+          color: `hsl(${Math.random() * 30 + 15}, 100%, 50%)`, // สีส้ม-เหลืองทอง
+          alpha: 1,
+          life: Math.random() * 20 + 10
+        });
+      }
+    }
+
+    /* --- ระบบอัปเดต Render สะเก็ดไฟตลอดเวลา --- */
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.04;
+        p.life--;
+
+        if (p.alpha <= 0 || p.life <= 0) {
+          particles.splice(i, 1);
+        } else {
+          fxCtx.save();
+          fxCtx.globalAlpha = p.alpha;
+          fxCtx.fillStyle = p.color;
+          fxCtx.shadowColor = '#ff5722';
+          fxCtx.shadowBlur = 6;
+          fxCtx.beginPath();
+          fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          fxCtx.fill();
+          fxCtx.restore();
+        }
+      }
+    }
+
     /* --- ระบบจับลากไม้ขีดถูเองแบบสมจริง --- */
     function onStart(e) {
       isDraggingMatch = true;
@@ -358,27 +380,39 @@
       lastX = clientX;
       lastY = clientY;
 
-      // ปรับตำแหน่งก้านไม้ขีดตามมือ/เมาส์
+      // จัดตำแหน่งก้านไม้ขีดไฟตามตำแหน่งมือ/เมาส์ (คำนวณตำแหน่งหัวไม้ขีด)
       matchEl.style.position = 'fixed';
-      matchEl.style.left = (clientX - 45) + 'px';
-      matchEl.style.top = (clientY - 30) + 'px';
-      matchEl.style.zIndex = '99';
+      matchEl.style.left = (clientX - 50) + 'px';
+      matchEl.style.top = (clientY - 50) + 'px';
+      matchEl.style.bottom = 'auto';
 
-      // เช็คการถูบนแถบข้างกล่อง
+      // หัวไม้ขีดจะอยู่ตำแหน่งมุมซ้ายบนของไม้ขีด
+      const matchHeadX = clientX - 30;
+      const matchHeadY = clientY - 30;
+
+      // 1. ถ้ายังจุดไม่ติด: ตรวจสอบการถูขัดสีกับแถบจุดซ้ายมือ
       if (!isLit) {
         const strikerRect = strikerStrip.getBoundingClientRect();
         if (clientX >= strikerRect.left && clientX <= strikerRect.right &&
             clientY >= strikerRect.top && clientY <= strikerRect.bottom) {
           
-          if (moveDistance > 2) {
+          if (moveDistance > 3) {
             frictionScore += moveDistance;
-            if (frictionScore > 250) {
+            // สาดสะเก็ดไฟขณะกำลังถูขัดสี
+            createSparks(matchHeadX, matchHeadY, 3);
+
+            // เมื่อถูสะสมได้ระยะประมาณ 2-3 รอบขัดถู
+            if (frictionScore > 450) {
               isLit = true;
-              flameEl.style.display = 'block';
-              strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลาง';
+              matchImg.src = 'ไม้ขีดไฟ.png'; // เปลี่ยนเป็นรูปไม้ขีดที่จุดติดไฟแล้ว
+              strikerStrip.innerText = 'ติดไฟแล้ว! นำไปจุดตรงกลาง';
+              createSparks(matchHeadX, matchHeadY, 25); // พุ่งสะเก็ดไฟชุดใหญ่เมื่อติดไฟ
             }
           }
         }
+      } else {
+        // 2. ถ้าติดไฟแล้ว: ลากไม้ขีดไปไหนก็จะมีสะเก็ดไฟพริ้วตาม
+        createSparks(matchHeadX, matchHeadY, 2);
       }
 
       // นำไม้ขีดไฟไปจ่อตรงกลางหน้าจอเพื่อเริ่มไหม้อัตโนมัติ
@@ -387,7 +421,7 @@
         const centerY = window.innerHeight / 2;
         const distFromCenter = Math.hypot(clientX - centerX, clientY - centerY);
 
-        if (distFromCenter < 140) {
+        if (distFromCenter < 160) {
           startAutoBurn(centerX, centerY);
         }
       }
@@ -410,11 +444,13 @@
       autoBurning = true;
       burnRadius = 10;
 
-      // ซ่อนกล่องไม้ขีดเมื่อเริ่มจุดติดกระดาษ
-      matchboxArea.style.opacity = '0';
-      setTimeout(() => { matchboxArea.style.display = 'none'; }, 500);
+      // ซ่อนแถบจุดและไม้ขีดไฟลงเมื่อเริ่มการเผา
+      strikerContainer.style.opacity = '0';
+      matchEl.style.display = 'none';
 
       function burnStep() {
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+
         if (burnRadius < maxBurnRadius) {
           burnRadius += 3.5;
 
@@ -426,8 +462,7 @@
           ctx.fill();
           ctx.restore();
 
-          // 2. วาดขอบไหม้สมจริงสีดำ/ส้มลุกลามลง Canvas FX
-          fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+          // 2. วาดขอบไหม้และปล่อยสะเก็ดไฟตามขอบที่ไหม้
           fxCtx.save();
           fxCtx.beginPath();
           fxCtx.arc(cx, cy, burnRadius + 8, 0, Math.PI * 2);
@@ -444,16 +479,34 @@
           fxCtx.stroke();
           fxCtx.restore();
 
+          // สร้างสะเก็ดไฟกระจายรอบขอบวงกลมกระดาษที่กำลังไหม้
+          const randomAngle = Math.random() * Math.PI * 2;
+          const sparkX = cx + Math.cos(randomAngle) * burnRadius;
+          const sparkY = cy + Math.sin(randomAngle) * burnRadius;
+          createSparks(sparkX, sparkY, 2);
+
+          updateParticles();
           requestAnimationFrame(burnStep);
         } else {
-          // เผาเสร็จสิ้น -> ค่อยแสดงปุ่มหัวใจกดค้าง
+          // เผาเสร็จสิ้น -> เคลียร์ FX และแสดงปุ่มหัวใจ
           fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+          strikerContainer.style.display = 'none';
           document.getElementById('heartSection').style.display = 'flex';
         }
       }
 
       burnStep();
     }
+
+    // วนลูปวาดสะเก็ดไฟขณะยังไม่เข้าสู่โหมด autoBurn
+    function mainFxLoop() {
+      if (!autoBurning) {
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+        updateParticles();
+      }
+      requestAnimationFrame(mainFxLoop);
+    }
+    mainFxLoop();
 
     /* --- ระบบกดค้างหัวใจ --- */
     const heartBtn = document.getElementById('heartBtn');
