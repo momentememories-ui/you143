@@ -277,17 +277,17 @@
       z-index: 10;
     }
 
-    /* Keyframe เด้งโผล่จากศูนย์กลางแล้วกระจายตัวไปยังตำแหน่งของตัวเอง */
-    @keyframes burstAndSpread {
+    /* Keyframe เด้งพุ่งกระจายออกจากจุดศูนย์กลางหัวใจ */
+    @keyframes burstFromHeart {
       0% {
-        top: 50%;
-        left: 50%;
+        top: var(--origin-top);
+        left: var(--origin-left);
         transform: translate(-50%, -50%) scale(0) rotate(0deg);
         opacity: 0;
       }
-      60% {
+      70% {
         opacity: 1;
-        transform: translate(0, 0) scale(1.1) rotate(var(--target-rotate));
+        transform: translate(0, 0) scale(1.12) rotate(var(--target-rotate));
       }
       100% {
         opacity: 1;
@@ -295,22 +295,38 @@
       }
     }
 
-    /* Keyframe ขยับเด้งขึ้นลงเบาๆ ชวนให้กดดูรูป */
-    @keyframes gentleBounce {
+    /* Keyframe เขย่าลอยเด้งดึ๋งแบบที่ 1 (ขึ้นลงเอียงขวา) */
+    @keyframes idleBounceStyle1 {
       0%, 100% {
         transform: translateY(0px) rotate(var(--target-rotate));
       }
       50% {
-        transform: translateY(-8px) rotate(var(--target-rotate));
+        transform: translateY(-10px) rotate(calc(var(--target-rotate) + 3deg));
+      }
+    }
+
+    /* Keyframe เขย่าลอยเด้งดึ๋งแบบที่ 2 (ขึ้นลงเอียงซ้าย) */
+    @keyframes idleBounceStyle2 {
+      0%, 100% {
+        transform: translateY(0px) rotate(var(--target-rotate));
+      }
+      50% {
+        transform: translateY(-7px) rotate(calc(var(--target-rotate) - 4deg));
       }
     }
 
     .polaroid.animate-burst {
-      animation: burstAndSpread 0.75s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: burstFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
     }
 
-    .polaroid.idle-bounce {
-      animation: gentleBounce 2.5s ease-in-out infinite;
+    .polaroid.idle-bounce-1 {
+      animation: idleBounceStyle1 var(--bounce-duration) ease-in-out infinite;
+      animation-delay: var(--bounce-delay);
+    }
+
+    .polaroid.idle-bounce-2 {
+      animation: idleBounceStyle2 var(--bounce-duration) ease-in-out infinite;
+      animation-delay: var(--bounce-delay);
     }
 
     .polaroid.active {
@@ -744,8 +760,13 @@
         if (waterLevel >= 100) {
           stopWatering();
           setTimeout(() => {
+            // คำนวณพิกัดจุดศูนย์กลางของรูปหัวใจ ณ วินาทีที่เติมเต็ม
+            const heartRect = bigHeartContainer.getBoundingClientRect();
+            const heartCenterX = heartRect.left + (heartRect.width / 2);
+            const heartCenterY = heartRect.top + (heartRect.height / 2);
+
             heartModal.style.display = 'none';
-            showPolaroidsSimultaneously();
+            showPolaroidsSimultaneously(heartCenterX, heartCenterY);
             spawnMassiveHearts();
           }, 350);
         }
@@ -800,19 +821,23 @@
       }, 120);
     }
 
+    // กำหนดการตั้งค่าของแต่ละรูปภาพ (ตำแหน่ง, มุมเอียง, สไตล์การเขย่า, ความเร็ว, และดีเลย์)
     const polaroidData = [
-      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '8%', left: '6%', rotate: '-9deg' },
-      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '10%', left: '56%', rotate: '8deg' },
-      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '38%', left: '30%', rotate: '-3deg' },
-      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '60%', left: '8%', rotate: '7deg' },
-      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '62%', left: '54%', rotate: '-6deg' }
+      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '8%', left: '6%', rotate: '-9deg', bounceStyle: 'idle-bounce-1', duration: '2.3s', delay: '0s' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '10%', left: '56%', rotate: '8deg', bounceStyle: 'idle-bounce-2', duration: '2.8s', delay: '0.4s' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '38%', left: '30%', rotate: '-3deg', bounceStyle: 'idle-bounce-1', duration: '2.1s', delay: '0.2s' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '60%', left: '8%', rotate: '7deg', bounceStyle: 'idle-bounce-2', duration: '2.6s', delay: '0.5s' },
+      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '62%', left: '54%', rotate: '-6deg', bounceStyle: 'idle-bounce-1', duration: '2.4s', delay: '0.1s' }
     ];
 
-    function showPolaroidsSimultaneously() {
+    function showPolaroidsSimultaneously(originX, originY) {
       const overlay = document.getElementById('polaroidOverlay');
       const container = document.getElementById('polaroidContainer');
       container.innerHTML = '';
       overlay.style.display = 'flex';
+
+      const originXPx = originX ? (originX + 'px') : '50%';
+      const originYPx = originY ? (originY + 'px') : '50%';
 
       polaroidData.forEach((item, index) => {
         const card = document.createElement('div');
@@ -820,6 +845,10 @@
         card.style.top = item.top;
         card.style.left = item.left;
         card.style.setProperty('--target-rotate', item.rotate);
+        card.style.setProperty('--origin-left', originXPx);
+        card.style.setProperty('--origin-top', originYPx);
+        card.style.setProperty('--bounce-duration', item.duration);
+        card.style.setProperty('--bounce-delay', item.delay);
         card.style.zIndex = index + 1;
 
         card.innerHTML = `
@@ -828,15 +857,15 @@
           <div class="caption">${item.text}</div>
         `;
 
-        // สั่งให้เด้งออกมาพร้อมกันจากจุดศูนย์กลาง
+        // แอนิเมชันเด้งออกจากจุดศูนย์กลางหัวใจ
         card.classList.add('animate-burst');
 
-        // เมื่อแอนิเมชันกระจายตัวเสร็จ ให้เริ่มแอนิเมชันลอยเด้งดึ๋ง
+        // เมื่อกระจายตัวเสร็จ ให้เปลี่ยนเป็นแอนิเมชันเขย่าขยับลอยตามสไตล์ของแต่ละใบ
         setTimeout(() => {
           card.classList.remove('animate-burst');
           card.style.opacity = '1';
-          card.classList.add('idle-bounce');
-        }, 750);
+          card.classList.add(item.bounceStyle);
+        }, 800);
 
         card.addEventListener('click', (e) => {
           e.stopPropagation();
