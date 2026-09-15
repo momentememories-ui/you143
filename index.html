@@ -125,7 +125,6 @@
     .matchstick-item:active { cursor: grabbing; }
     .matchstick-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-    /* ปรับปุ่มหัวใจ: ขยับมาทางซ้าย (left: 42%) */
     .bouncing-heart-trigger {
       position: absolute;
       bottom: 80px;
@@ -206,14 +205,14 @@
       50% { opacity: 1; }
     }
 
-    /* ปรับพื้นหลังเป็นสีขาวล้วน ไม่มีลวดลาย */
+    /* ปรับพื้นหลังหน้ารูปโพลารอยด์เป็นสีชมพู */
     .polaroid-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #ffffff;
+      background: #ffe4e9;
       z-index: 300;
       display: none;
       justify-content: center;
@@ -277,7 +276,7 @@
 
     .polaroid.active {
       position: fixed !important;
-      top: 51% !important;
+      top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) scale(1) rotate(0deg) !important;
       z-index: 999 !important;
@@ -313,7 +312,7 @@
       bottom: 25px;
       left: 50%;
       transform: translateX(-50%);
-      background: #ffb7ce;
+      background: #ff8ba7;
       color: #ffffff;
       border: none;
       padding: 10px 22px;
@@ -322,13 +321,13 @@
       font-weight: 500;
       cursor: pointer;
       z-index: 400;
-      box-shadow: 0 4px 15px rgba(255, 183, 206, 0.6);
+      box-shadow: 0 4px 15px rgba(255, 139, 167, 0.5);
       transition: transform 0.2s, background-color 0.2s;
     }
 
     .back-to-message-btn:active {
       transform: translateX(-50%) scale(0.95);
-      background: #ff8ba7;
+      background: #ff7096;
     }
 
     @keyframes burstOutFromHeart {
@@ -772,13 +771,13 @@
       }, 120);
     }
 
-    /* ขยับหน้ารูปโพลารอยด์ลงมาอีก 5% (เพิ่มค่า top) */
+    /* ปรับตำแหน่งตำแหน่งรูปโพลารอยด์ให้อยู่ตรงกลางมากขึ้น */
     const polaroidData = [
-      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '28%', left: '11%', rotate: '-7deg' },
-      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '26%', left: '50%', rotate: '6deg' },
-      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '55%', left: '13%', rotate: '-4deg' },
-      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '53%', left: '51%', rotate: '8deg' },
-      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '40%', left: '32%', rotate: '2deg' }
+      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '18%', left: '11%', rotate: '-7deg' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '16%', left: '50%', rotate: '6deg' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '45%', left: '13%', rotate: '-4deg' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '43%', left: '51%', rotate: '8deg' },
+      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '30%', left: '32%', rotate: '2deg' }
     ];
 
     function showPolaroidsSimultaneously() {
@@ -822,7 +821,6 @@
         container.appendChild(card);
       });
 
-      /* สร้างเอฟเฟกต์ให้อิโมจิหัวใจลอยขึ้นตลอดเวลาในหน้าโพลารอยด์ */
       if (continuousHeartsInterval) clearInterval(continuousHeartsInterval);
       continuousHeartsInterval = setInterval(() => {
         if (overlay.style.display === 'flex') {
