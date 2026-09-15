@@ -205,7 +205,6 @@
       50% { opacity: 1; }
     }
 
-    /* ปรับพื้นหลังหน้ารูปโพลารอยด์เป็นสีชมพู */
     .polaroid-overlay {
       position: absolute;
       top: 0;
@@ -771,13 +770,13 @@
       }, 120);
     }
 
-    /* ปรับตำแหน่งตำแหน่งรูปโพลารอยด์ให้อยู่ตรงกลางมากขึ้น */
+    /* ปรับตำแหน่งรูปโพลารอยด์ให้กระจายทั่วหน้าจอ ไม่ซ้อนทับกันเป็นกระจุก */
     const polaroidData = [
-      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '18%', left: '11%', rotate: '-7deg' },
-      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '16%', left: '50%', rotate: '6deg' },
-      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '45%', left: '13%', rotate: '-4deg' },
-      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '43%', left: '51%', rotate: '8deg' },
-      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '30%', left: '32%', rotate: '2deg' }
+      { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '8%', left: '6%', rotate: '-9deg' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '10%', left: '56%', rotate: '8deg' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '38%', left: '30%', rotate: '-3deg' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '60%', left: '8%', rotate: '7deg' },
+      { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '62%', left: '54%', rotate: '-6deg' }
     ];
 
     function showPolaroidsSimultaneously() {
