@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Anniversary Card - Realistic Match Burn</title>
-  <!-- นำเข้าฟอนต์ Kanit จาก Google Fonts -->
+  <title>Anniversary Card</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -86,7 +85,7 @@
       pointer-events: none;
     }
 
-    /* Canvas สำหรับวาดไฟไหม้ รอยเกรียม และสะเก็ดไฟ (ย้ายมาอยู่อันดับสูงสุด z-index: 100) */
+    /* Canvas สำหรับวาดไฟไหม้และรอยเกรียมขอบธรรมชาติ (เลเยอร์บนสุด) */
     #fxCanvas {
       position: absolute;
       top: 0;
@@ -145,56 +144,87 @@
       pointer-events: none;
     }
 
-    /* ส่วนหัวใจกดค้าง */
-    .controls {
+    /* อิโมจิหัวใจชมพูเด้งดึงดูดสายตา (ไม่มีกรอบ ไม่มียอดคำพูด) */
+    .bouncing-heart-trigger {
       position: absolute;
-      bottom: 30px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 10;
-      width: 80%;
+      font-size: 65px;
+      cursor: pointer;
+      z-index: 150;
+      display: none;
+      animation: heartBounce 1.2s infinite ease-in-out;
+      filter: drop-shadow(0 6px 12px rgba(255, 105, 180, 0.4));
     }
 
-    .heart-section {
+    @keyframes heartBounce {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.35) rotate(-5deg); }
+    }
+
+    /* Overlay ป๊อปอัปหัวใจดวงใหญ่เต็มหน้าจอ */
+    .big-heart-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 200;
       display: none;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 14px 20px;
-      border-radius: 20px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.15);
-      animation: fadeIn 0.8s forwards;
+      animation: fadeIn 0.4s ease;
     }
 
-    .heart-section p {
-      color: #d81b60;
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .heart-btn {
-      font-size: 44px;
+    /* คอนเทนเนอร์หัวใจดวงใหญ่จำลองเติมน้ำ */
+    .big-heart-container {
+      position: relative;
+      width: 240px;
+      height: 220px;
       cursor: pointer;
-      filter: grayscale(100%);
-      transition: transform 0.1s;
     }
 
-    .heart-btn:active { transform: scale(0.9); }
-
-    .progress-bar-bg {
+    /* หัวใจเส้นขอบขาวโปร่งใส */
+    .big-heart-shape {
       width: 100%;
-      height: 8px;
-      background-color: #f0f0f0;
-      border-radius: 10px;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.2);
+      clip-path: path('M120,200 C120,200 20,130 20,70 C20,35 45,15 75,15 C95,15 110,25 120,40 C130,25 145,15 165,15 C195,15 220,35 220,70 C220,130 120,200 120,200 Z');
+      position: relative;
+      border: 2px solid rgba(255, 255, 255, 0.6);
       overflow: hidden;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
     }
 
-    .progress-bar-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #ff80ab, #ff4081);
-      transition: width 0.1s linear;
+    /* น้ำสีชมพูไล่ระดับซึมจากล่างขึ้นบน */
+    .heart-water-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(0deg, #ff4081, #ff80ab);
+      transition: height 0.15s ease-out;
+      box-shadow: 0 0 15px #ff4081;
+    }
+
+    .fill-instruction {
+      color: #ffffff;
+      font-size: 15px;
+      margin-top: 20px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      animation: pulseText 1.5s infinite;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
     }
 
     /* Modal ป๊อปอัปโพลารอยด์ */
@@ -205,7 +235,7 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.75);
-      z-index: 200;
+      z-index: 300;
       display: none;
       justify-content: center;
       align-items: center;
@@ -229,64 +259,71 @@
     .polaroid .caption { text-align: center; font-size: 12px; color: #333; margin-top: 8px; font-weight: 400; }
     .polaroid.active { transform: scale(1.5) translate(-15%, -15%) !important; z-index: 999 !important; }
 
+    /* อิโมจิหัวใจลอยกระจาย */
+    .floating-heart {
+      position: absolute;
+      pointer-events: none;
+      z-index: 350;
+      font-size: 24px;
+      animation: floatUp 2.5s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-350px) scale(1.5) rotate(25deg); opacity: 0; }
+    }
+
     @keyframes popUp {
       0% { transform: scale(0); opacity: 0; }
       100% { opacity: 1; }
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-  <!-- เสียงเพลง background -->
   <audio id="bgMusic" loop autoplay>
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- หน้าจอแสดงผลสัดส่วน 9:16 -->
   <div class="app-viewport" id="viewport">
     <div class="card-container" id="cardContainer">
-      <!-- ชั้นที่ 3: ข้อความ -->
       <img src="กระดาษ3.png" class="layer-3-message" alt="ข้อความ">
-
-      <!-- ชั้นที่ 2: Canvas กระดาษเผา -->
       <canvas id="burnCanvas"></canvas>
-
-      <!-- ชั้นที่ 1: กล่อง -->
       <img src="กล่อง.png" class="layer-1-box" alt="กล่อง">
-
-      <!-- Canvas แสดงประกายไฟ/ขอบไหม้ธรรมชาติ (เลเยอร์บนสุด) -->
       <canvas id="fxCanvas"></canvas>
     </div>
 
-    <!-- แถบข้างกล่องถูจุด (ซ้ายมือ) -->
+    <!-- แถบถูจุดไม้ขีด -->
     <div class="striker-fixed-container" id="strikerContainer">
       <div class="matchbox-striker" id="strikerStrip">
         ถูไม้ขีดตรงนี้ 2-3 รอบ 🔥
       </div>
     </div>
 
-    <!-- ก้านไม้ขีดไฟ -->
+    <!-- ไม้ขีด -->
     <div class="matchstick-item" id="draggableMatch">
       <img id="matchImg" src="ไม้ขีด.png" alt="ไม้ขีด">
     </div>
 
-    <!-- ส่วนหัวใจกดค้าง -->
-    <div class="controls">
-      <div class="heart-section" id="heartSection">
-        <p>กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
-        <div class="heart-btn" id="heartBtn">❤️</div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progressFill"></div>
+    <!-- อิโมจิหัวใจชมพูเด้งๆ -->
+    <div class="bouncing-heart-trigger" id="heartTrigger">💗</div>
+
+    <!-- ป๊อปอัปหัวใจดวงใหญ่เต็มหน้าจอสำหรับเติมน้ำ -->
+    <div class="big-heart-modal" id="heartModal">
+      <div class="big-heart-container" id="bigHeartContainer">
+        <div class="big-heart-shape">
+          <div class="heart-water-fill" id="waterFill"></div>
         </div>
       </div>
+      <p class="fill-instruction">แตะหรือกดค้างเพื่อเติมความรัก ❤️</p>
     </div>
 
-    <!-- ป๊อปอัปโพลารอยด์ 5 ภาพ -->
+    <!-- โพลารอยด์ป๊อปอัป -->
     <div class="polaroid-overlay" id="polaroidOverlay">
       <div class="polaroid-container" id="polaroidContainer"></div>
     </div>
@@ -304,6 +341,7 @@
     const matchImg = document.getElementById('matchImg');
     const strikerStrip = document.getElementById('strikerStrip');
     const strikerContainer = document.getElementById('strikerContainer');
+    const heartTrigger = document.getElementById('heartTrigger');
 
     let isLit = false;
     let frictionScore = 0;
@@ -312,20 +350,17 @@
     let burnRadius = 0;
     let maxBurnRadius = 0;
 
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
+    let dragOffsetX = 0, dragOffsetY = 0;
     let lastX = 0, lastY = 0;
 
-    // ระบบ Particles สะเก็ดไฟ
     let particles = [];
 
-    // คำนวณรูปแบบรอยเว้าไหม้ตามภาพตัวอย่าง
+    // สร้างเส้นทางความหยักแบบธรรมชาติ (โค้งมน ไร้มุมสามเหลี่ยมแข็งๆ)
     const noiseAngles = [];
     const numPoints = 120;
     for (let i = 0; i < numPoints; i++) {
-      const wave = Math.sin(i * 0.15) * 0.25 + Math.cos(i * 0.35) * 0.15;
-      const rand = (Math.random() - 0.5) * 0.2;
-      noiseAngles.push(0.85 + wave + rand);
+      const wave = Math.sin(i * 0.1) * 0.12 + Math.cos(i * 0.2) * 0.08;
+      noiseAngles.push(0.95 + wave);
     }
 
     function resizeCanvas() {
@@ -354,18 +389,17 @@
       if (bgMusic.paused) bgMusic.play();
     }, { once: true });
 
-    /* --- สร้างสะเก็ดไฟกระจาย (Spark Particles) --- */
-    function createSparks(x, y, count = 5, spread = 10) {
+    function createSparks(x, y, count = 3, spread = 8) {
       for (let i = 0; i < count; i++) {
         particles.push({
           x: x,
           y: y,
           vx: (Math.random() - 0.5) * spread,
-          vy: (Math.random() - 0.5) * spread - 1.5,
-          size: Math.random() * 3.5 + 1.5,
+          vy: (Math.random() - 0.5) * spread - 1.2,
+          size: Math.random() * 3 + 1,
           color: `hsl(${Math.random() * 30 + 15}, 100%, 55%)`,
           alpha: 1,
-          life: Math.random() * 20 + 12
+          life: Math.random() * 18 + 10
         });
       }
     }
@@ -384,8 +418,6 @@
           fxCtx.save();
           fxCtx.globalAlpha = Math.max(0, p.alpha);
           fxCtx.fillStyle = p.color;
-          fxCtx.shadowColor = '#ff5722';
-          fxCtx.shadowBlur = 6;
           fxCtx.beginPath();
           fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           fxCtx.fill();
@@ -394,7 +426,6 @@
       }
     }
 
-    /* --- ระบบจับและลากไม้ขีดไฟ --- */
     function onStart(e) {
       if (e.cancelable) e.preventDefault();
       isDraggingMatch = true;
@@ -436,7 +467,6 @@
       const matchHeadX = relativeX - dragOffsetX + 45;
       const matchHeadY = relativeY - dragOffsetY + 25;
 
-      // 1. ถูไม้ขีดบนแผ่นข้างกล่อง
       if (!isLit) {
         const strikerRect = strikerStrip.getBoundingClientRect();
         if (clientX >= strikerRect.left && clientX <= strikerRect.right &&
@@ -444,20 +474,19 @@
           
           if (moveDistance > 2) {
             frictionScore += moveDistance;
-            createSparks(relativeX, relativeY, 4, 12);
+            createSparks(relativeX, relativeY, 3, 10);
 
-            if (frictionScore > 300) {
+            if (frictionScore > 280) {
               isLit = true;
               matchImg.src = 'ไม้ขีดไฟ.png';
               strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลางกระดาษ';
-              createSparks(relativeX, relativeY, 30, 18);
+              createSparks(relativeX, relativeY, 25, 15);
             }
           }
         }
       } else {
-        createSparks(matchHeadX, matchHeadY, 2, 5);
+        createSparks(matchHeadX, matchHeadY, 2, 4);
 
-        // 2. แตะตรงกลางหน้าจอเพื่อจุดเผากระดาษ2
         if (!autoBurning) {
           const screenCenterX = vpRect.width / 2;
           const screenCenterY = vpRect.height / 2;
@@ -482,8 +511,7 @@
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onEnd);
 
-    /* --- วาดเส้นขอบกระดาษไหม้แบบมีรอยหยักเว้าแหว่งธรรมชาติ --- */
-    function drawOrganicPath(context, cx, cy, radius, offset = 0) {
+    function drawSmoothPath(context, cx, cy, radius, offset = 0) {
       context.beginPath();
       for (let i = 0; i < numPoints; i++) {
         const angle = (i / numPoints) * Math.PI * 2;
@@ -496,7 +524,7 @@
       context.closePath();
     }
 
-    /* --- ระบบเผากระดาษถ่านไหม้ --- */
+    /* --- ค่อยๆ เผากระดาษแบบขอบฟุ้งธรรมชาติ --- */
     function startAutoBurn(cx, cy) {
       autoBurning = true;
       burnRadius = 10;
@@ -508,62 +536,55 @@
         fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
 
         if (burnRadius < maxBurnRadius) {
-          burnRadius += 3.8;
+          burnRadius += 2.8; // ปรับความเร็วการค่อยๆ ไหม้
 
-          // 1. เจาะรอยไหม้กระดาษชั้นที่ 2
+          // 1. ลบเนื้อกระดาษ2
           ctx.save();
           ctx.globalCompositeOperation = 'destination-out';
-          drawOrganicPath(ctx, cx, cy, burnRadius);
+          drawSmoothPath(ctx, cx, cy, burnRadius);
           ctx.fill();
           ctx.restore();
 
-          // 2. วาดรอยไหม้เกรียมสีน้ำตาลดำไล่เฉดบนเลเยอร์สูงสุด
+          // 2. เผาไหม้เกรียมขอบธรรมชาติ
           fxCtx.save();
           
-          // แถบเงารอยไหม้ฟุ้งสีน้ำตาลเข้มลึกเข้ามาในกระดาษ
-          drawOrganicPath(fxCtx, cx, cy, burnRadius, 35);
-          fxCtx.strokeStyle = 'rgba(70, 35, 10, 0.45)';
-          fxCtx.lineWidth = 28;
-          fxCtx.shadowColor = 'rgba(40, 20, 5, 0.8)';
-          fxCtx.shadowBlur = 15;
+          // ขอบไหม้ฟุ้งสีน้ำตาลเข้ม
+          drawSmoothPath(fxCtx, cx, cy, burnRadius, 25);
+          fxCtx.strokeStyle = 'rgba(60, 30, 10, 0.4)';
+          fxCtx.lineWidth = 22;
+          fxCtx.shadowColor = 'rgba(30, 15, 5, 0.7)';
+          fxCtx.shadowBlur = 12;
           fxCtx.stroke();
 
-          // แถบขอบเถ้าถ่านสีดำเกรียมขอบไหม้
-          drawOrganicPath(fxCtx, cx, cy, burnRadius, 12);
-          fxCtx.strokeStyle = 'rgba(20, 10, 5, 0.95)';
-          fxCtx.lineWidth = 16;
+          // ขอบเกรียมสีดำ
+          drawSmoothPath(fxCtx, cx, cy, burnRadius, 8);
+          fxCtx.strokeStyle = 'rgba(15, 8, 3, 0.9)';
+          fxCtx.lineWidth = 12;
           fxCtx.stroke();
 
-          // เปลวไฟส้มแดงติดถ่านขอบไหม้
-          drawOrganicPath(fxCtx, cx, cy, burnRadius);
-          fxCtx.strokeStyle = 'rgba(255, 100, 0, 0.9)';
-          fxCtx.lineWidth = 6;
+          // เปลวถ่านสีส้มแดง
+          drawSmoothPath(fxCtx, cx, cy, burnRadius);
+          fxCtx.strokeStyle = 'rgba(255, 90, 0, 0.85)';
+          fxCtx.lineWidth = 5;
           fxCtx.shadowColor = '#ff3300';
-          fxCtx.shadowBlur = 16;
+          fxCtx.shadowBlur = 12;
           fxCtx.stroke();
           fxCtx.restore();
-
-          // ปล่อยสะเก็ดไฟประปรายตามรอยหยักไหม้
-          const randomIdx = Math.floor(Math.random() * numPoints);
-          const randAngle = (randomIdx / numPoints) * Math.PI * 2;
-          const r = burnRadius * noiseAngles[randomIdx];
-          createSparks(cx + Math.cos(randAngle) * r, cy + Math.sin(randAngle) * r, 2, 6);
 
           updateParticles();
           requestAnimationFrame(burnStep);
         } else {
-          // เผาเสร็จเรียบร้อย -> แสดงปุ่มหัวใจ
+          // เผาเสร็จ แสดงอิโมจิหัวใจเด้งๆ
           fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           strikerContainer.style.display = 'none';
-          document.getElementById('heartSection').style.display = 'flex';
+          heartTrigger.style.display = 'block';
         }
       }
 
       burnStep();
     }
 
-    // Loop วาดสะเก็ดไฟ
     function mainFxLoop() {
       if (!autoBurning) {
         fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
@@ -573,46 +594,90 @@
     }
     mainFxLoop();
 
-    /* --- ระบบกดค้างหัวใจ --- */
-    const heartBtn = document.getElementById('heartBtn');
-    const progressFill = document.getElementById('progressFill');
-    let holdTimer = null;
-    let progress = 0;
+    /* --- กดหัวใจชมพูเพื่อเปิดหน้าจอหัวใจดวงใหญ่ --- */
+    const heartModal = document.getElementById('heartModal');
+    const waterFill = document.getElementById('waterFill');
+    const bigHeartContainer = document.getElementById('bigHeartContainer');
 
-    function startHold() {
-      holdTimer = setInterval(() => {
-        if (progress < 100) {
-          progress += 3;
-          progressFill.style.width = progress + '%';
-          heartBtn.style.filter = `grayscale(${100 - progress}%)`;
-        } else {
-          clearInterval(holdTimer);
-          showPolaroids();
+    heartTrigger.addEventListener('click', () => {
+      heartTrigger.style.display = 'none';
+      heartModal.style.display = 'flex';
+    });
+
+    /* --- ระบบเติมน้ำในหัวใจดวงใหญ่ --- */
+    let waterLevel = 0;
+    let fillInterval = null;
+
+    function addWater() {
+      if (waterLevel < 100) {
+        waterLevel += 4;
+        if (waterLevel > 100) waterLevel = 100;
+        waterFill.style.height = waterLevel + '%';
+        createFloatingHearts(3);
+
+        if (waterLevel >= 100) {
+          stopWatering();
+          setTimeout(() => {
+            heartModal.style.display = 'none';
+            showPolaroids();
+            spawnMassiveHearts();
+          }, 400);
         }
-      }, 50);
-    }
-
-    function stopHold() {
-      clearInterval(holdTimer);
-      if (progress < 100) {
-        progress = 0;
-        progressFill.style.width = '0%';
-        heartBtn.style.filter = 'grayscale(100%)';
       }
     }
 
-    heartBtn.addEventListener('mousedown', startHold);
-    heartBtn.addEventListener('mouseup', stopHold);
-    heartBtn.addEventListener('mouseleave', stopHold);
-    
-    heartBtn.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      startHold();
-    }, { passive: false });
-    
-    heartBtn.addEventListener('touchend', stopHold);
+    function startWatering() {
+      addWater();
+      fillInterval = setInterval(addWater, 60);
+    }
 
-    /* --- ระบบโพลารอยด์ป๊อปอัป 5 ภาพ --- */
+    function stopWatering() {
+      if (fillInterval) clearInterval(fillInterval);
+    }
+
+    bigHeartContainer.addEventListener('mousedown', startWatering);
+    window.addEventListener('mouseup', stopWatering);
+
+    bigHeartContainer.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      startWatering();
+    }, { passive: false });
+    window.addEventListener('touchend', stopWatering);
+
+    /* --- สร้างอิโมจิหัวใจลอยฟุ้ง --- */
+    const heartTypes = ['💗', '💖', '💕', '💓', '❤️', '🌸'];
+
+    function createFloatingHearts(count = 1) {
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+        
+        const startX = Math.random() * (viewport.clientWidth - 40) + 20;
+        const startY = viewport.clientHeight - 80;
+        
+        heart.style.left = startX + 'px';
+        heart.style.top = startY + 'px';
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+
+        viewport.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 2500);
+      }
+    }
+
+    function spawnMassiveHearts() {
+      let counter = 0;
+      const interval = setInterval(() => {
+        createFloatingHearts(4);
+        counter++;
+        if (counter > 15) clearInterval(interval);
+      }, 150);
+    }
+
+    /* --- โพลารอยด์ป๊อปอัป 5 ภาพ --- */
     const polaroidData = [
       { img: 'img1.jpg', text: 'รูปแรกของเรา 💕', top: '15%', left: '10%', rotate: '-10deg' },
       { img: 'img2.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '12%', left: '52%', rotate: '8deg' },
