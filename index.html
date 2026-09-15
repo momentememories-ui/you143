@@ -25,7 +25,7 @@
       height: 100vh;
       overflow: hidden;
       background-color: #ffffff;
-      touch-action: none; /* ป้องกันการดึงแถบแจ้งเตือนหรือการ Scroll ของเบราว์เซอร์ */
+      touch-action: none; /* ป้องกันการดึงแถบแจ้งเตือนหรือ Scroll บนมือถือ */
     }
 
     /* คอนเทนเนอร์การ์ดเต็มจอ */
@@ -59,7 +59,7 @@
       z-index: 2;
     }
 
-    /* Canvas สำหรับวาดประกายไฟขอบไหม้แบบธรรมชาติ และสะเก็ดไฟ */
+    /* Canvas สำหรับวาดไฟไหม้และสะเก็ดไฟ */
     #fxCanvas {
       position: absolute;
       top: 0;
@@ -82,22 +82,22 @@
       pointer-events: none;
     }
 
-    /* --- แถบที่ถูจุดไม้ขีดไฟ (ตำแหน่งซ้ายมือ) --- */
+    /* --- แถบที่ถูจุดไม้ขีดไฟ (วางซ้ายมือ) --- */
     .striker-fixed-container {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
+      bottom: 25px;
+      left: 25px;
       z-index: 10;
       transition: opacity 0.5s ease;
     }
 
     .matchbox-striker {
-      width: 240px;
-      height: 60px;
+      width: 250px;
+      height: 65px;
       background: #3e2723;
       border: 3px solid #271714;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -107,10 +107,10 @@
       background-image: repeating-linear-gradient(45deg, #2c1b18 0, #2c1b18 5px, #3e2723 5px, #3e2723 10px);
     }
 
-    /* --- ก้านไม้ขีดไฟ (วางมุมขวาล่างสุด) --- */
+    /* --- ก้านไม้ขีดไฟ (วางมุมล่างขวา) --- */
     .matchstick-item {
-      width: 600px;
-      height: 150px;
+      width: 550px;
+      height: 140px;
       cursor: grab;
       position: absolute;
       bottom: 10px;
@@ -298,11 +298,12 @@
     // ระบบ Particles สะเก็ดไฟ
     let particles = [];
 
-    // สร้างจุดหยักเพื่อเผากระดาษแบบธรรมชาติ
+    // สร้างจุดสุ่มเพื่อจำลองขอบไหม้กระดาษหยักธรรมชาติแบบสุ่มสมจริง
     const noiseAngles = [];
-    const numPoints = 60;
+    const numPoints = 80;
     for (let i = 0; i < numPoints; i++) {
-      noiseAngles.push(0.7 + Math.random() * 0.6);
+      // เพิ่มความขรุขระของรอยหยักกระดาษให้อ่อนพริ้วธรรมชาติ
+      noiseAngles.push(0.65 + Math.random() * 0.7);
     }
 
     function resizeCanvas() {
@@ -329,15 +330,15 @@
       if (bgMusic.paused) bgMusic.play();
     }, { once: true });
 
-    /* --- สร้างสะเก็ดไฟแบบสุ่มกระจาย (Spark Particles) --- */
-    function createSparks(x, y, count = 8) {
+    /* --- สร้างสะเก็ดไฟกระจาย (Spark Particles) --- */
+    function createSparks(x, y, count = 6, spread = 12) {
       for (let i = 0; i < count; i++) {
         particles.push({
           x: x,
           y: y,
-          vx: (Math.random() - 0.5) * 12,
-          vy: (Math.random() - 0.5) * 12 - 2,
-          size: Math.random() * 4 + 2,
+          vx: (Math.random() - 0.5) * spread,
+          vy: (Math.random() - 0.5) * spread - 2,
+          size: Math.random() * 4.5 + 2,
           color: `hsl(${Math.random() * 35 + 10}, 100%, 55%)`,
           alpha: 1,
           life: Math.random() * 25 + 15
@@ -398,18 +399,18 @@
       lastX = clientX;
       lastY = clientY;
 
-      // ปรับตำแหน่งก้านไม้ขีดตามมือลาก
+      // ลากไม้ขีดไฟตามตำแหน่งนิ้ว/เมาส์
       matchEl.style.position = 'fixed';
       matchEl.style.left = (clientX - dragOffsetX) + 'px';
       matchEl.style.top = (clientY - dragOffsetY) + 'px';
       matchEl.style.right = 'auto';
       matchEl.style.bottom = 'auto';
 
-      // พิกัดจุดหัวไม้ขีดไฟ (ตำแหน่งประมาณมุมซ้ายบนของรูปไม้ขีด)
-      const matchHeadX = clientX - dragOffsetX + 60;
+      // คำนวณตำแหน่งพิกัดหัวไม้ขีดไฟ
+      const matchHeadX = clientX - dragOffsetX + 50;
       const matchHeadY = clientY - dragOffsetY + 30;
 
-      // 1. ถูไม้ขีดบนแถบข้างกล่อง
+      // 1. ตรวจจับการขูดถูบนแผ่นข้างกล่อง (Striker Strip)
       if (!isLit) {
         const strikerRect = strikerStrip.getBoundingClientRect();
         if (clientX >= strikerRect.left && clientX <= strikerRect.right &&
@@ -417,30 +418,33 @@
           
           if (moveDistance > 2) {
             frictionScore += moveDistance;
-            // ปล่อยสะเก็ดไฟขณะถู
-            createSparks(matchHeadX, matchHeadY, 4);
+            
+            // ให้สะเก็ดไฟขึ้นตรงแผ่นขูดข้างหน้า ณ ตำแหน่งที่กำลังถูพอดี
+            createSparks(clientX, clientY, 5, 14);
 
             if (frictionScore > 350) {
               isLit = true;
-              matchImg.src = 'ไม้ขีดไฟ.png'; // เปลี่ยนเป็นรูปไม้ขีดที่มีไฟ
-              strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดกระดาษได้เลย';
-              createSparks(matchHeadX, matchHeadY, 35); // พุ่งสะเก็ดไฟชุดใหญ่เมื่อติด
+              matchImg.src = 'ไม้ขีดไฟ.png'; // สลับเป็นรูปไม้ขีดที่ติดไฟแล้ว
+              strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลางหน้าจอ';
+              createSparks(clientX, clientY, 40, 20); // สาดสะเก็ดไฟกระจายชุดใหญ่บนแผ่นขูด
             }
           }
         }
       } else {
-        // ขณะติดไฟแล้วจะมีสะเก็ดไฟโปรยเรื่อยๆ
-        createSparks(matchHeadX, matchHeadY, 2);
+        // เมื่อติดไฟแล้ว ปล่อยสะเก็ดไฟพริ้วตามหัวไม้ขีด
+        createSparks(matchHeadX, matchHeadY, 2, 6);
 
-        // 2. เมื่อติดไฟแล้ว นำไม้ขีดไปแตะที่กระดาษ2 เพื่อเริ่มการเผา
+        // 2. นำไม้ขีดไฟมาจุดตรงบริเวณกลางหน้าจอเพื่อเผากระดาษ2
         if (!autoBurning) {
-          // ตรวจสอบว่าหัวไม้ขีดเข้ามาอยู่ในเขตรอบกระดาษตรงกลาง (ไม่ติดขอบเกินไป)
-          const marginX = window.innerWidth * 0.15;
-          const marginY = window.innerHeight * 0.15;
+          const screenCenterX = window.innerWidth / 2;
+          const screenCenterY = window.innerHeight / 2;
           
-          if (matchHeadX > marginX && matchHeadX < window.innerWidth - marginX &&
-              matchHeadY > marginY && matchHeadY < window.innerHeight - marginY) {
-            startAutoBurn(matchHeadX, matchHeadY);
+          // คำนวณระยะห่างจากกึ่งกลางหน้าจอ
+          const distToCenter = Math.hypot(matchHeadX - screenCenterX, matchHeadY - screenCenterY);
+          
+          // เมื่อนำหัวไม้ขีดมาเข้าใกล้รัศมีตรงกลางหน้าจอ
+          if (distToCenter < 160) {
+            startAutoBurn(screenCenterX, screenCenterY); // เริ่มเผาโดยยึดจุดศูนย์กลางหน้าจอแบบเป๊ะๆ
           }
         }
       }
@@ -458,7 +462,7 @@
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onEnd);
 
-    /* --- วาดเส้นรูปร่างขอบไหม้ธรรมชาติ --- */
+    /* --- วาดเส้นขอบกระดาษไหม้แบบรอยหยักธรรมชาติ --- */
     function drawOrganicPath(context, cx, cy, radius) {
       context.beginPath();
       for (let i = 0; i < numPoints; i++) {
@@ -472,12 +476,12 @@
       context.closePath();
     }
 
-    /* --- ระบบกระดาษไหม้อัตโนมัติ --- */
+    /* --- ระบบเผากระดาษไหม้สมจริงจากตรงกลางหน้าจอ --- */
     function startAutoBurn(cx, cy) {
       autoBurning = true;
-      burnRadius = 15;
+      burnRadius = 10;
 
-      // ซ่อนแถบจุดและไม้ขีดไฟ
+      // ซ่อนแผ่นขูดและก้านไม้ขีดออก
       strikerContainer.style.opacity = '0';
       matchEl.style.display = 'none';
 
@@ -487,38 +491,40 @@
         if (burnRadius < maxBurnRadius) {
           burnRadius += 4.5;
 
-          // 1. เจาะรูไหม้ลงบนกระดาษชั้นที่ 2 เท่านั้น
+          // 1. เจาะรอยไหม้ลงบนกระดาษชั้นที่ 2 จากตรงกลางหน้าจอ
           ctx.save();
           ctx.globalCompositeOperation = 'destination-out';
           drawOrganicPath(ctx, cx, cy, burnRadius);
           ctx.fill();
           ctx.restore();
 
-          // 2. วาดขอบเปลวไฟไหม้
+          // 2. วาดขอบประกายเปลวไฟ และรอยไหม้เกรียมธรรมชาติ
           fxCtx.save();
-          drawOrganicPath(fxCtx, cx, cy, burnRadius + 12);
-          fxCtx.strokeStyle = 'rgba(255, 70, 0, 0.85)';
-          fxCtx.lineWidth = 18;
+          // วาดเปลวไฟส้มสว่างด้านนอก
+          drawOrganicPath(fxCtx, cx, cy, burnRadius + 14);
+          fxCtx.strokeStyle = 'rgba(255, 80, 0, 0.85)';
+          fxCtx.lineWidth = 20;
           fxCtx.shadowColor = '#ff3300';
-          fxCtx.shadowBlur = 22;
+          fxCtx.shadowBlur = 24;
           fxCtx.stroke();
 
+          // วาดขอบกระดาษไหม้สีน้ำตาลเข้มเกรียมด้านใน
           drawOrganicPath(fxCtx, cx, cy, burnRadius);
-          fxCtx.strokeStyle = 'rgba(30, 15, 5, 0.95)';
-          fxCtx.lineWidth = 10;
+          fxCtx.strokeStyle = 'rgba(35, 18, 8, 0.95)';
+          fxCtx.lineWidth = 12;
           fxCtx.stroke();
           fxCtx.restore();
 
-          // ปล่อยสะเก็ดไฟรอบรอยไหม้
+          // สุ่มกระจายสะเก็ดไฟตามขอบรอยหยักกระดาษที่กำลังไหม้
           const randomIdx = Math.floor(Math.random() * numPoints);
           const randAngle = (randomIdx / numPoints) * Math.PI * 2;
           const r = burnRadius * noiseAngles[randomIdx];
-          createSparks(cx + Math.cos(randAngle) * r, cy + Math.sin(randAngle) * r, 3);
+          createSparks(cx + Math.cos(randAngle) * r, cy + Math.sin(randAngle) * r, 3, 10);
 
           updateParticles();
           requestAnimationFrame(burnStep);
         } else {
-          // เผาเสร็จสมบูรณ์ -> แสดงปุ่มหัวใจ
+          // เผากระดาษ2 ออกทั้งหมดสมบูรณ์ -> แสดงปุ่มหัวใจ
           fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           strikerContainer.style.display = 'none';
@@ -529,7 +535,7 @@
       burnStep();
     }
 
-    // Loop วาดสะเก็ดไฟตลอดเวลา
+    // วนลูปวาดสะเก็ดไฟตลอดเวลา
     function mainFxLoop() {
       if (!autoBurning) {
         fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
