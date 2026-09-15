@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anniversary Card</title>
+  <title>Anniversary Card - Realistic Burn</title>
   <style>
     * {
       box-sizing: border-box;
@@ -13,14 +13,14 @@
     }
 
     body {
-      background-color: #000;
+      background-color: #ffffff; /* พื้นหลังสีขาวตามขอ */
       width: 100vw;
       height: 100vh;
       overflow: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* คอนเทนเนอร์ขยายเต็มหน้าจอ */
+    /* คอนเทนเนอร์การ์ดเต็มจอ */
     .card-container {
       position: absolute;
       top: 0;
@@ -30,14 +30,14 @@
       overflow: hidden;
     }
 
-    /* ชั้นที่ 3: ข้อความ (กระดาษ3.png) ขยายเต็มจอ */
+    /* ชั้นที่ 3: ข้อความ (กระดาษ3.png) */
     .layer-3-message {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: fill; /* ปรับภาพยืดเต็มพื้นที่ */
+      object-fit: fill;
       z-index: 1;
     }
 
@@ -51,112 +51,130 @@
       z-index: 2;
     }
 
-    /* ชั้นที่ 1: กล่อง (กล่อง.png) ขยายเต็มจอ */
+    /* Canvas สำหรับวาดประกายไฟขอบไหม้ */
+    #fxCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* ชั้นที่ 1: กล่อง (กล่อง.png) */
     .layer-1-box {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: fill; /* ปรับภาพยืดเต็มพื้นที่ */
-      z-index: 3;
+      object-fit: fill;
+      z-index: 4;
       pointer-events: none;
     }
 
-    /* ตัวลอยไม้ขีดไฟ */
-    .matchstick-cursor {
-      position: fixed;
-      width: 60px;
-      height: 60px;
-      pointer-events: none;
-      z-index: 99;
-      transform: translate(-10px, -10px) rotate(-20deg);
-      display: none;
-    }
-
-    .matchstick-cursor img {
-      width: 100%;
-      height: auto;
-    }
-
-    /* ประกายไฟตรงหัวไม้ขีด */
-    .flame {
+    /* --- ส่วนกล่องไม้ขีดไฟซ้ายล่าง (ขยายใหญ่ขึ้น 20%) --- */
+    .matchbox-area {
       position: absolute;
-      top: -12px;
-      left: 18px;
-      width: 20px;
-      height: 20px;
-      background: radial-gradient(circle, #ffff00 20%, #ff4500 70%, transparent 100%);
-      border-radius: 50%;
-      box-shadow: 0 0 15px #ff4500, 0 0 25px #ff8c00;
-      animation: flicker 0.1s infinite alternate;
-      display: none;
-    }
-
-    @keyframes flicker {
-      0% { transform: scale(0.9); opacity: 0.8; }
-      100% { transform: scale(1.2); opacity: 1; }
-    }
-
-    /* ปุ่มจุดไม้ขีดไฟและส่วนควบคุม (จัดวางลอยด้านบนหน้าจอ) */
-    .controls {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: 20px;
+      left: 20px;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      z-index: 10;
+      gap: 8px;
     }
 
-    .btn-ignite {
-      padding: 14px 32px;
-      background-color: #ff4081;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 18px;
-      font-weight: bold;
+    .matchbox-striker {
+      width: 156px; /* ขยายขึ้น 20% */
+      height: 48px;
+      background: #4a2c11;
+      border: 3px solid #2d1908;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
       cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #d7ccc8;
+      font-size: 12px;
+      font-weight: bold;
+      background-image: repeating-linear-gradient(45deg, #3e2723 0, #3e2723 4px, #4e342e 4px, #4e342e 8px);
     }
 
-    .btn-ignite:hover {
-      background-color: #f50057;
-      transform: scale(1.05);
+    .matchstick-item {
+      width: 84px; /* ขยายขึ้น 20% */
+      height: 18px;
+      cursor: grab;
+      position: relative;
+      transition: transform 0.1s;
+    }
+
+    .matchstick-item:active {
+      cursor: grabbing;
+    }
+
+    .matchstick-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* เปลวไฟขยับได้ตรงหัวไม้ขีด */
+    .flame-animated {
+      position: absolute;
+      top: -25px;
+      left: -10px;
+      width: 30px;
+      height: 40px;
+      background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffeb3b 25%, #ff9800 60%, transparent 80%);
+      border-radius: 50% 50% 35% 35%;
+      filter: drop-shadow(0 0 10px #ff5722);
+      animation: flameMotion 0.15s infinite alternate ease-in-out;
+      display: none;
+      pointer-events: none;
+    }
+
+    @keyframes flameMotion {
+      0% { transform: scale(0.9) rotate(-3deg); opacity: 0.9; }
+      100% { transform: scale(1.1) rotate(4deg); opacity: 1; }
     }
 
     /* ส่วนหัวใจกดค้าง */
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
     .heart-section {
       display: none;
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 12px 20px;
       border-radius: 20px;
-      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       animation: fadeIn 1s forwards;
     }
 
     .heart-btn {
-      font-size: 50px;
+      font-size: 45px;
       cursor: pointer;
       filter: grayscale(100%);
       transition: transform 0.1s;
     }
 
-    .heart-btn:active {
-      transform: scale(0.9);
-    }
+    .heart-btn:active { transform: scale(0.9); }
 
     .progress-bar-bg {
-      width: 220px;
-      height: 12px;
-      background-color: rgba(255, 255, 255, 0.3);
+      width: 180px;
+      height: 10px;
+      background-color: #eee;
       border-radius: 10px;
       overflow: hidden;
     }
@@ -175,24 +193,20 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       z-index: 100;
       display: none;
       justify-content: center;
       align-items: center;
     }
 
-    .polaroid-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
+    .polaroid-container { position: relative; width: 100%; height: 100%; }
 
     .polaroid {
       position: absolute;
-      width: 200px;
+      width: 190px;
       background: white;
-      padding: 12px 12px 24px 12px;
+      padding: 10px 10px 20px 10px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       border-radius: 4px;
       cursor: pointer;
@@ -200,25 +214,9 @@
       animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
     }
 
-    .polaroid img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 2px;
-    }
-
-    .polaroid .caption {
-      text-align: center;
-      font-size: 14px;
-      color: #333;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    .polaroid.active {
-      transform: scale(1.6) translate(-25%, -25%) !important;
-      z-index: 999 !important;
-    }
+    .polaroid img { width: 100%; height: 150px; object-fit: cover; }
+    .polaroid .caption { text-align: center; font-size: 13px; color: #333; margin-top: 8px; font-weight: bold; }
+    .polaroid.active { transform: scale(1.6) translate(-25%, -25%) !important; z-index: 999 !important; }
 
     @keyframes popUp {
       0% { transform: scale(0); opacity: 0; }
@@ -242,30 +240,36 @@
     <!-- ชั้นที่ 3: ข้อความ -->
     <img src="กระดาษ3.png" class="layer-3-message" alt="ข้อความ">
 
-    <!-- ชั้นที่ 2: กระดาษสำหรับเผา -->
+    <!-- ชั้นที่ 2: Canvas กระดาษเผา -->
     <canvas id="burnCanvas"></canvas>
+
+    <!-- Canvas แสดงประกายไฟ/ขอบไหม้ลุกลาม -->
+    <canvas id="fxCanvas"></canvas>
 
     <!-- ชั้นที่ 1: กล่อง -->
     <img src="กล่อง.png" class="layer-1-box" alt="กล่อง">
   </div>
 
-  <div class="controls">
-    <button class="btn-ignite" id="igniteBtn" onclick="igniteMatch()">🔥 จุดไม้ขีดไฟ</button>
+  <!-- กล่องไม้ขีดมุมซ้ายล่าง -->
+  <div class="matchbox-area">
+    <div class="matchbox-striker" id="strikerStrip">
+      ถูไม้ขีดตรงนี้ 🔥
+    </div>
+    <div class="matchstick-item" id="draggableMatch">
+      <div class="flame-animated" id="flame"></div>
+      <img src="ไม้ขีด.png" alt="ไม้ขีด">
+    </div>
+  </div>
 
-    <!-- ส่วนหัวใจกดค้าง -->
+  <!-- ส่วนหัวใจกดค้าง -->
+  <div class="controls">
     <div class="heart-section" id="heartSection">
-      <p style="color: #fff; font-size: 14px; text-shadow: 0 1px 3px #000;">กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
+      <p style="color: #c2185b; font-size: 13px; font-weight: bold;">กดค้างที่หัวใจเพื่อเติมความทรงจำ ❤️</p>
       <div class="heart-btn" id="heartBtn">❤️</div>
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progressFill"></div>
       </div>
     </div>
-  </div>
-
-  <!-- ไม้ขีดไฟลอยตาม Cursor -->
-  <div class="matchstick-cursor" id="matchCursor">
-    <div class="flame" id="flame"></div>
-    <img src="ไม้ขีด.png" alt="ไม้ขีด">
   </div>
 
   <!-- ป๊อปอัปโพลารอยด์ 5 ภาพ -->
@@ -276,114 +280,137 @@
   <script>
     const canvas = document.getElementById('burnCanvas');
     const ctx = canvas.getContext('2d');
-    const container = document.getElementById('cardContainer');
-    const matchCursor = document.getElementById('matchCursor');
-    const flame = document.getElementById('flame');
+    const fxCanvas = document.getElementById('fxCanvas');
+    const fxCtx = fxCanvas.getContext('2d');
     const bgMusic = document.getElementById('bgMusic');
 
-    let isIgnited = false;
-    let isBurning = false;
-    let burnedPixels = 0;
-    let heartTriggered = false;
+    const matchEl = document.getElementById('draggableMatch');
+    const flameEl = document.getElementById('flame');
+    const strikerStrip = document.getElementById('strikerStrip');
 
-    // ฟังก์ชันปรับขนาด Canvas ให้ตรงกับขนาดหน้าจอจริงเสมอ
+    let isLit = false;
+    let strikeCount = 0;
+    let isDraggingMatch = false;
+    let autoBurning = false;
+    let burnRadius = 0;
+    let maxBurnRadius = 0;
+
+    // ปรับขนาด Canvas เต็มจอ
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      fxCanvas.width = window.innerWidth;
+      fxCanvas.height = window.innerHeight;
+      maxBurnRadius = Math.max(canvas.width, canvas.height) * 0.7;
       drawPaper();
     }
 
-    // ดึงรูปกระดาษ2.png มาวาดลงบน Canvas
     const paperImg = new Image();
     paperImg.src = 'กระดาษ2.png';
-    paperImg.onload = () => {
-      resizeCanvas();
-    };
+    paperImg.onload = () => resizeCanvas();
 
     function drawPaper() {
       ctx.globalCompositeOperation = 'source-over';
       ctx.drawImage(paperImg, 0, 0, canvas.width, canvas.height);
     }
 
-    // ปรับขนาด Canvas อัตโนมัติเมื่อมีการย่อ/ขยายหน้าจอ
     window.addEventListener('resize', resizeCanvas);
 
-    // เล่นเพลงอัตโนมัติเมื่อมีการสัมผัส/คลิกหน้าจอครั้งแรก
     window.addEventListener('click', () => {
       if (bgMusic.paused) bgMusic.play();
     }, { once: true });
 
-    // ขยับไม้ขีดไฟตาม Cursor
+    /* --- ระบบลากไม้ขีดไฟ --- */
+    let matchX = 0, matchY = 0;
+
+    matchEl.addEventListener('mousedown', (e) => {
+      isDraggingMatch = true;
+      e.preventDefault();
+    });
+
     window.addEventListener('mousemove', (e) => {
-      matchCursor.style.left = e.clientX + 'px';
-      matchCursor.style.top = e.clientY + 'px';
-    });
+      if (!isDraggingMatch) return;
 
-    // กดปุ่มจุดไม้ขีดไฟ
-    function igniteMatch() {
-      isIgnited = true;
-      flame.style.display = 'block';
-      matchCursor.style.display = 'block';
-      document.getElementById('igniteBtn').style.display = 'none';
-    }
+      matchX = e.clientX;
+      matchY = e.clientY;
 
-    container.addEventListener('mouseenter', () => {
-      if (isIgnited) matchCursor.style.display = 'block';
-    });
+      matchEl.style.position = 'fixed';
+      matchEl.style.left = (matchX - 20) + 'px';
+      matchEl.style.top = (matchY - 10) + 'px';
+      matchEl.style.zIndex = '99';
 
-    container.addEventListener('mouseleave', () => {
-      matchCursor.style.display = 'none';
-      isBurning = false;
-    });
-
-    // เริ่มการลากเผากระดาษ
-    container.addEventListener('mousedown', (e) => {
-      if (isIgnited) { isBurning = true; burn(e); }
-    });
-    container.addEventListener('mouseup', () => isBurning = false);
-    container.addEventListener('mousemove', (e) => {
-      if (isIgnited && isBurning) burn(e);
-    });
-
-    // รองรับสัมผัสหน้าจอมือถือ
-    container.addEventListener('touchstart', (e) => {
-      if (isIgnited) { isBurning = true; burn(e.touches[0]); }
-    });
-    container.addEventListener('touchend', () => isBurning = false);
-    container.addEventListener('touchmove', (e) => {
-      if (isIgnited && isBurning) burn(e.touches[0]);
-    });
-
-    // ฟังก์ชันรอยไหม้และเจาะรู
-    function burn(e) {
-      const x = e.clientX;
-      const y = e.clientY;
-
-      // ขอบไหม้สีส้ม
-      ctx.save();
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.beginPath();
-      ctx.arc(x, y, 35, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(230, 80, 10, 0.5)';
-      ctx.shadowColor = '#ff4500';
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      ctx.restore();
-
-      // ลบกระดาษออก
-      ctx.save();
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(x, y, 28, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      burnedPixels += 1;
-      // เมื่อเผากระดาษไปได้ระดับหนึ่ง ให้แสดงส่วนกดหัวใจ
-      if (burnedPixels > 80 && !heartTriggered) {
-        heartTriggered = true;
-        document.getElementById('heartSection').style.display = 'flex';
+      // เช็คการถูกับแถบข้างกล่อง
+      if (!isLit) {
+        const strikerRect = strikerStrip.getBoundingClientRect();
+        if (matchX >= strikerRect.left && matchX <= strikerRect.right &&
+            matchY >= strikerRect.top && matchY <= strikerRect.bottom) {
+          strikeCount += 1;
+          if (strikeCount > 15) { // ถูประมาณ 3-4 รอบติดไฟ
+            isLit = true;
+            flameEl.style.display = 'block';
+            strikerStrip.innerText = 'จุดติดแล้ว! นำไปจุดตรงกลาง';
+          }
+        }
       }
+
+      // เช็คเมื่อนำไม้ขีดติดไฟไปแตะบริเวณตรงกลางจอ
+      if (isLit && !autoBurning) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const distFromCenter = Math.hypot(matchX - centerX, matchY - centerY);
+
+        if (distFromCenter < 120) {
+          startAutoBurn(centerX, centerY);
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', () => { isDraggingMatch = false; });
+
+    /* --- ระบบกระดาษไหม้อัตโนมัติจากตรงกลาง --- */
+    function startAutoBurn(cx, cy) {
+      autoBurning = true;
+      burnRadius = 10;
+
+      function burnStep() {
+        if (burnRadius < maxBurnRadius) {
+          burnRadius += 3.5; // ความเร็วการลุกลาม
+
+          // 1. เจาะรูไหม้กระดาษชั้นที่ 2
+          ctx.save();
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.beginPath();
+          ctx.arc(cx, cy, burnRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+
+          // 2. วาดขอบไหม้สมจริงสีดำ/ส้มลุกลามลง Canvas FX
+          fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+          fxCtx.save();
+          fxCtx.beginPath();
+          fxCtx.arc(cx, cy, burnRadius + 8, 0, Math.PI * 2);
+          fxCtx.strokeStyle = 'rgba(255, 69, 0, 0.8)';
+          fxCtx.lineWidth = 14;
+          fxCtx.shadowColor = '#ff2200';
+          fxCtx.shadowBlur = 18;
+          fxCtx.stroke();
+
+          fxCtx.beginPath();
+          fxCtx.arc(cx, cy, burnRadius, 0, Math.PI * 2);
+          fxCtx.strokeStyle = 'rgba(30, 20, 10, 0.9)';
+          fxCtx.lineWidth = 8;
+          fxCtx.stroke();
+          fxCtx.restore();
+
+          requestAnimationFrame(burnStep);
+        } else {
+          // เผาเสร็จสิ้น
+          fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+          document.getElementById('heartSection').style.display = 'flex';
+        }
+      }
+
+      burnStep();
     }
 
     /* --- ระบบกดค้างหัวใจ --- */
@@ -448,7 +475,6 @@
             <div class="caption">${item.text}</div>
           `;
 
-          // กดซูมรูปเฉพาะใบที่คลิก
           card.addEventListener('click', (e) => {
             e.stopPropagation();
             document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
@@ -460,7 +486,6 @@
       });
     }
 
-    // คลิกพื้นที่ว่างเพื่อขยายรูปกลับขนาดปกติ
     document.getElementById('polaroidOverlay').addEventListener('click', () => {
       document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
     });
