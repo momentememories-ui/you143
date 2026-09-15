@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Anniversary Card</title>
+  <title>Happy Anniversary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -125,7 +125,6 @@
     .matchstick-item:active { cursor: grabbing; }
     .matchstick-item img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
 
-    /* ปรับตำแหน่งขยับมาทางซ้ายนิดนึง */
     .bouncing-heart-trigger {
       position: absolute;
       bottom: 80px;
@@ -166,7 +165,6 @@
       cursor: pointer;
     }
 
-    /* เส้นขอบสีชมพูพาสเทลแท้ */
     .big-heart-shape {
       width: 100%;
       height: 100%;
@@ -177,7 +175,6 @@
       box-shadow: 0 10px 25px rgba(255, 183, 206, 0.4);
     }
 
-    /* น้ำสีชมพูพาสเทลบริสุทธิ์ ไม่ส้ม ไม่พีช */
     .heart-water-fill {
       position: absolute;
       bottom: 0;
@@ -209,12 +206,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.82);
-      backdrop-filter: blur(5px);
+      background: #fff0f4;
+      backdrop-filter: blur(8px);
       z-index: 300;
       display: none;
       justify-content: center;
       align-items: center;
+      animation: fadeIn 0.4s ease;
     }
 
     .polaroid-container { position: relative; width: 100%; height: 100%; }
@@ -224,8 +222,8 @@
       width: 135px;
       background: #ffffff;
       padding: 8px 8px 10px 8px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-      border-radius: 6px;
+      box-shadow: 0 10px 25px rgba(255, 183, 206, 0.35);
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.27);
       animation: burstOutFromHeart 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.27) forwards;
@@ -235,11 +233,10 @@
       width: 100%;
       height: 120px;
       object-fit: cover;
-      border-radius: 3px;
+      border-radius: 4px;
       display: block;
     }
 
-    /* ตัวหนังสือใต้รูปเป็นสีดำ */
     .polaroid .caption {
       display: none;
       text-align: center;
@@ -264,12 +261,11 @@
       line-height: 26px;
       font-size: 13px;
       font-weight: bold;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 8px rgba(255, 139, 167, 0.4);
       cursor: pointer;
       z-index: 10;
     }
 
-    /* รูปขยาย: แสดงขนาดเต็มของรูปโดยไม่โดนตัดขอบ */
     .polaroid.active {
       position: fixed !important;
       top: 50% !important;
@@ -280,7 +276,7 @@
       max-width: 320px !important;
       height: auto !important;
       padding: 12px 12px 16px 12px !important;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8) !important;
+      box-shadow: 0 15px 40px rgba(255, 139, 167, 0.4) !important;
     }
 
     .polaroid.active img {
@@ -288,7 +284,7 @@
       height: auto !important;
       max-height: 60vh !important;
       object-fit: contain !important;
-      background-color: #f8f8f8;
+      background-color: #fff8fa;
     }
 
     .polaroid.active .caption {
@@ -357,7 +353,8 @@
 </head>
 <body>
 
-  <audio id="bgMusic" loop autoplay>
+  <!-- เพลงตั้งค่าให้ลูปวนซ้ำเรื่อยๆ -->
+  <audio id="bgMusic" loop preload="auto">
     <source src="music.mp3" type="audio/mpeg">
   </audio>
 
@@ -371,7 +368,7 @@
 
     <div class="striker-fixed-container" id="strikerContainer">
       <div class="matchbox-striker" id="strikerStrip">
-        ถูไม้ขีดตรงนี้ 5-6 รอบ 🔥
+        ถูไม้ขีดตรงนี้เพื่อจุดไฟ🔥
       </div>
     </div>
 
@@ -392,7 +389,7 @@
 
     <div class="polaroid-overlay" id="polaroidOverlay">
       <div class="polaroid-container" id="polaroidContainer"></div>
-      <button class="back-to-message-btn" id="backBtn">🔙 ดูข้อความอีกครั้ง</button>
+      <button class="back-to-message-btn" id="backBtn">ย้อนกลับ</button>
     </div>
   </div>
 
@@ -410,6 +407,25 @@
     const strikerContainer = document.getElementById('strikerContainer');
     const heartTrigger = document.getElementById('heartTrigger');
     const backBtn = document.getElementById('backBtn');
+
+    /* ฟังก์ชันเล่นเพลงเมื่อแตะหน้าจอครั้งแรก */
+    function playAudioOnFirstInteraction() {
+      if (bgMusic && bgMusic.paused) {
+        bgMusic.play().then(() => {
+          console.log("Music started playing automatically");
+        }).catch((err) => {
+          console.log("Autoplay waiting for interaction:", err);
+        });
+      }
+      // ถอนคำสั่งเมื่อเล่นเพลงได้แล้ว
+      window.removeEventListener('touchstart', playAudioOnFirstInteraction);
+      window.removeEventListener('click', playAudioOnFirstInteraction);
+      window.removeEventListener('mousedown', playAudioOnFirstInteraction);
+    }
+
+    window.addEventListener('touchstart', playAudioOnFirstInteraction, { passive: true });
+    window.addEventListener('click', playAudioOnFirstInteraction);
+    window.addEventListener('mousedown', playAudioOnFirstInteraction);
 
     let isLit = false;
     let frictionScore = 0;
@@ -466,10 +482,6 @@
     };
 
     window.addEventListener('resize', resizeCanvas);
-
-    window.addEventListener('click', () => {
-      if (bgMusic.paused) bgMusic.play();
-    }, { once: true });
 
     function createSparks(x, y, count = 3, spread = 8) {
       for (let i = 0; i < count; i++) {
@@ -558,7 +570,6 @@
             frictionScore += moveDistance;
             createSparks(relativeX, relativeY, 3, 10);
 
-            /* ปรับเพิ่มค่าเพื่อให้ติดยากขึ้น ต้องถูประมาณ 5-6 รอบ */
             if (frictionScore > 750) {
               isLit = true;
               matchImg.src = 'ไม้ขีดไฟ.png';
@@ -722,14 +733,14 @@
 
     const pastelHearts = ['💗', '💖', '💕', '🌸', '✨'];
 
-    function createFloatingHearts(count = 1) {
+    function createFloatingHearts(count = 1, customX = null, customY = null) {
       for (let i = 0; i < count; i++) {
         const heart = document.createElement('div');
         heart.className = 'floating-heart';
         heart.innerText = pastelHearts[Math.floor(Math.random() * pastelHearts.length)];
         
-        const startX = Math.random() * (viewport.clientWidth - 40) + 20;
-        const startY = viewport.clientHeight / 2 + 50;
+        const startX = customX !== null ? (customX + (Math.random() * 60 - 30)) : (Math.random() * (viewport.clientWidth - 40) + 20);
+        const startY = customY !== null ? (customY + (Math.random() * 40 - 20)) : (viewport.clientHeight / 2 + 50);
         
         heart.style.left = startX + 'px';
         heart.style.top = startY + 'px';
@@ -752,9 +763,9 @@
 
     const polaroidData = [
       { img: 'photo1.jpg', text: 'รูปแรกของเรา 💕', top: '22%', left: '12%', rotate: '-8deg' },
-      { img: 'photo2.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊', top: '20%', left: '50%', rotate: '7deg' },
-      { img: 'photo3.jpg', text: 'รอยยิ้มนี้ชอบที่สุด 😊', top: '48%', left: '15%', rotate: '-5deg' },
-      { img: 'photo4.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '46%', left: '50%', rotate: '10deg' },
+      { img: 'photo2.jpg', text: 'กินของอร่อยด้วยกัน 🍰', top: '20%', left: '50%', rotate: '7deg' },
+      { img: 'photo3.jpg', text: 'ทริปเที่ยวด้วยกัน 🌊ร', top: '48%', left: '15%', rotate: '-5deg' },
+      { img: 'photo4.jpg', text: 'ภูเขาด้วยกัน❤️', top: '46%', left: '50%', rotate: '10deg' },
       { img: 'photo5.jpg', text: 'อยู่ด้วยกันไปนานๆ นะ ❤️', top: '34%', left: '32%', rotate: '2deg' }
     ];
 
@@ -785,6 +796,8 @@
           
           if (!isActive) {
             card.classList.add('active');
+            const rect = card.getBoundingClientRect();
+            createFloatingHearts(6, rect.left + rect.width / 2, rect.top + rect.height / 2);
           }
         });
 
